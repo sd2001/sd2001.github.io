@@ -1,6 +1,5 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
-
 # Create your models here.
 
 class Projects(models.Model):
@@ -8,7 +7,7 @@ class Projects(models.Model):
     description = models.CharField(max_length=100, null=False)
     image = CloudinaryField('image', default="https://res.cloudinary.com/sd2001/image/upload/v1620818730/temp_cvo0h5.jpg", null=True)
     github = models.CharField(max_length=70, null=False)
-    live = models.CharField(max_length=70, required = False)
+    live = models.CharField(max_length=70, null=True, blank=True)
     
     def __str__(self):
         return self.name

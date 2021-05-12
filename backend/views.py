@@ -3,7 +3,7 @@ from .models import Projects, Messages
 
 # Create your views here.
 def home(request):
-    try:
+    # try:
         projects = Projects.objects.all()
         confirm = ""
         if request.method == 'POST':        
@@ -17,8 +17,8 @@ def home(request):
         
         value = {'projects': projects, 'confirm': confirm}    
         return render(request, 'index.html', value)
-    except:
-        return render(request, 'error.html')
+    # except:
+    #     return render(request, 'error.html')
 
 def error(request):
-    return render(request, 'error.html')
+    return render(request, 'error')

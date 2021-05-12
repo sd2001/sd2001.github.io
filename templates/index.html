@@ -1,0 +1,355 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Believer | Swarnabha &#169</title>	
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+	<!-- Mouse Animation -->
+	<div class="mouse-circle">
+
+	</div>
+	<div class="mouse-dot">
+
+	</div>
+	<!-- Page Container -->
+	<div class="container">
+		 <!-- Background -->
+		 <div class="page-bg">
+			
+		 </div>
+
+	<!-- Progress Bar -->
+	<a href="" class="progress-bar center sticky">
+		<div class="half-circle"></div>
+		<div class="half-circle"></div>
+		<div class="half-circle-top"></div>
+		<div class="progress-bar-circle center">&#8595</div>
+	</a>
+	
+	<!-- Navigation -->
+
+	<div class="menu-icon center sticky">
+		<div class="menu-icon-line"></div>
+		<div class="menu-icon-line"></div>
+	</div>
+
+	<nav class="navbar">
+		<a href="#section1" class="navbar-link enter">Repo</a>
+		<a href="#section2" class="navbar-link enter">Docs</a>
+		<a href="#section3" class="navbar-link enter">Production</a>
+		<a href="#section4" class="navbar-link enter">Releases</a>
+		<a href="#section5" class="navbar-link enter">Logout</a>
+	</nav>
+
+	<!-- Sections of the webpage -->
+
+	<section class="section-1" id="section1">
+		<a href="" class="logo">Swarnabha Das</a>
+
+		<div class="circles">
+			<div class="circle circle-1"></div>
+			<div class="circle circle-2"></div>
+			<div class="circle circle-3"></div>
+			<div class="circle circle-4"></div>
+			
+		</div>
+
+		<div class="main-circle center">
+			<img src="./static/images/personal/self1.jpg" alt="">
+		</div>
+		<!-- Featured Text -->
+		<div class="featured-text featured-text-1">Python - Backend</div> 
+		<div class="featured-text featured-text-2">Developer</div>
+
+		<a href="#section3" class="main-btn">
+			<div class="main-btn-content center enter">
+				<div class="main-btn-line"></div>
+				<div class="main-btn-line"></div>
+				<div class="main-btn-line"></div>
+				<span>Projects</span>
+			</div>
+		</a>
+		
+	</section>
+
+	<!-- SECTION 2 -->
+	<section class="section2 " id="section2">
+		<h1 class="section2-header center">About Me...</h1>
+		<br>
+		<!-- <h1 class="section2-side">Swarnabha</h1> -->
+		<div class="about-socials">
+			<ul>
+				<li class="socials">
+					<a href="https://www.linkedin.com/in/swarnabha-das-2001official/">
+					<img src="./static/images/social-icons/linkedin.png" alt="">
+					</a>
+				</li>
+				<li class="socials">
+					<a href="https://github.com/sd2001">
+					<img src="./static/images/social-icons/github.png" alt="">
+					</a>
+				</li>
+				<li class="socials">
+					<a href="https://medium.com/@im.swarnabha2001">
+					<img src="./static/images/social-icons/medium.png" alt="">
+					</a>
+				</li>
+				<li class="socials">
+					<a href="mailto:im.swarnabha2001@gmail.com">
+					<img src="./static/images/social-icons/gmail.png" alt="">
+					</a>
+				</li>
+				<li class="socials">
+					<a href="https://www.instagram.com/__swarnabha.d__/">
+					<img src="./static/images/social-icons/instagram.png" alt="">
+					</a>
+				</li>
+				<li class="socials">
+					<a href="https://twitter.com/im_sd2001">
+					<img src="./static/images/social-icons/twitter.png" alt="">
+					</a>
+				</li>
+				<li class="socials">
+					<a href="https://www.facebook.com/swarnabha.das.737">
+					<img src="./static/images/social-icons/facebook.png" alt="">
+					</a>
+				</li>
+				
+			</ul>
+		</div>
+		
+		<p class="about-me-text">
+			<span>
+				I am a Result-Driven Sophomore and an Aspiring Backend Developer from SRM Institute of Science and Technology, KTR. I specialize working with Databases, Deploying Scalable Backend along with a keen Interest in Modern API Developement.	<br>			
+				Also, I am really passionate about:
+			</span>
+			<br>
+			<span class="fbox"> 
+				> Exploring and Hustling
+			</span>
+			<br>
+			<span class="fbox">
+				> Football & Arsenal
+			</span>
+			<br>
+			<span class="fbox">
+				> Kittens & Puppies
+			</span>
+			<br>
+			
+		</p>
+	</section>
+
+	<!-- SECTION 3 -->
+	<section class="section3" id="section3">
+		<h1 class="section3-side">My-Projects</h1>
+		<h1 class="section2-header">Don't just Think. Do it.</h1>
+		<div class="projects center">
+			{% for p in projects %}
+			<div class="card enter" style="background-image: url({{p.image.url}});">
+				<
+				<div class="card-body">
+					<h2 class="card-title">{{p.name}}</h2>
+					<p>{{p.description}}</p>
+					<a href='{{p.github}}'' class="button">Github</a>
+					<a href="{{p.live}}" class="button">It's Live</a>
+				</div>
+			</div>
+			{% endfor %}			
+		</div>
+		<a href="#" class="main-btn projects-btn">
+			<div class="main-btn-content center">
+				<div class="main-btn-line"></div>
+				<div class="main-btn-line"></div>
+				<div class="main-btn-line"></div>
+				<span>Show More</span>
+			</div>
+		</a>
+	</section>
+
+	<!-- SECTION 4 -->
+	<section class="section4" id="section4">
+		<h1 class="section4-header">
+		My-Experience	
+		</h1>
+		<h1 class="section2-header">WORK TIMELINE</h1>
+		<div class="timeline">
+			<ul>
+				<li>
+					<div class="container">
+						<h3>Next Tech Lab</h3>
+								<p>Joint-Syndicate(Present)</p>
+					</div>
+					<div class="time">
+						<h4>April 2021</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>Crio.do Contributor</h3>
+						<p>Worked on a URL Shortener</p>
+					</div>
+					<div class="time">
+						<h4>March 2021</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>Open Source - SLoP'20</SLoP></h3>
+						<p>Worked on an NLP Text categorization Project</p>
+					</div>
+					<div class="time">
+						<h4>November 2020</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>HackerEarth Runners Up</h3>
+						<p>Friendship Goals : Deep Learning Challenge</p>
+					</div>
+					<div class="time">
+						<h4>October 2020</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>Next Tech Lab</h3>
+						<p>Member</p>
+					</div>
+					<div class="time">
+						<h4>August 2020</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>Technocolabs, Indore</h3>
+						<p>Python Developer(July-August'20)</p>
+					</div>
+					<div class="time">
+						<h4>August 2020</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>Open Source PSoC'20</h3>
+						<p>Worked on a Deep Learning based Project - DeepPixel</p>
+					</div>
+					<div class="time">
+						<h4>July 2020</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>Next Tech Lab</h3>
+						<p>Associate</p>
+					</div>
+					<div class="time">
+						<h4>February 2020</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>SRM-MIC</h3>
+						<p>Community Executive(Present)</p>
+					</div>
+					<div class="time">
+						<h4>February 2020</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>SRM-SCRO</h3>
+						<p>Computer-Vision Associate(January'20 - February'20)</p>
+					</div>
+					<div class="time">
+						<h4>January 2020</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>SRM Institute of Science and Technology</h3>
+						<p>B.Tech in Computer Science(Present)</p>
+					</div>
+					<div class="time">
+						<h4>2019-2023</h4>
+					</div>
+				</li>
+				<li>
+					<div class="container">
+						<h3>Garden High School</h3>
+						<p>ICSE & ISC</p>
+					</div>
+					<div class="time">
+						<h4>2005 - 2019</h4>
+					</div>
+				</li>
+				
+				<div style="clear:both;"></div>
+			</ul>
+		</div>		
+	</section>
+
+	<!-- SETION 5 -->
+	<section class="section5 center" id="section5">
+		<h1 class="section5-header">< Let's grab some Coffee /></h1>
+		<h1 class="section5-side">
+		Lets-Connect	
+		</h1>
+		<div class="form-wrapper">
+			<form autocomplete="anyrandomstring" action="" class="contact-form center" method="POST">
+				{% csrf_token %}
+				<input name="Name" autocomplete="anyrandomstring" type="text" class="contact-form-input enter" placeholder="Name" required>
+				<input name="Email" autocomplete="anyrandomstring" type="email" class="contact-form-input enter" placeholder="Email" required>				
+				<textarea name="Message" class="contact-form-input contact-form-textarea enter" placeholder="Message" required></textarea>
+				<a href="#section5">
+					<input type="submit" class="form-submit-btn enter" value="Send"/>
+				</a>
+			</form>
+		</div>
+		{% if confirm == "Thanks for Sharing" %}
+		<div class="error center">
+			<h1>
+				Thanks for Sharing
+			</h1>
+		</div>
+		{% endif %}
+		<div class="slideshow center">
+			<a href="https://www.linkedin.com/in/swarnabha-das-2001official/" class="slideshow-link">
+				<img src="./static/images/social-icons/linkedin.png" alt="">
+			</a>
+			<a href="https://github.com/sd2001" class="slideshow-link">
+				<img src="./static/images/social-icons/github.png" alt="">
+			</a>
+			<a href="https://medium.com/@im.swarnabha2001" class="slideshow-link">
+				<img src="./static/images/social-icons/medium.png" alt="">
+			</a>
+			<a href="mailto:im.swarnabha2001@gmail.com" class="slideshow-link">
+				<img src="./static/images/social-icons/gmail.png" alt="">
+			</a>
+			<a href="https://twitter.com/im_sd2001" class="slideshow-link">
+				<img src="./static/images/social-icons/twitter.png" alt="">
+			</a>
+			<a href="https://www.instagram.com/__swarnabha.d__/" class="slideshow-link">
+				<img src="./static/images/social-icons/instagram.png" alt="">
+			</a>
+			<a href="https://www.facebook.com/swarnabha.das.737" class="slideshow-link">
+				<img src="./static/images/social-icons/facebook.png" alt="">
+			</a>
+		</div>
+		
+		<div class="footer center">
+			<h1>
+				Copyright &#169 2021 | Swarnabha Das
+			</h1>
+		</div>
+	</section>
+	</div>
+	
+	<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

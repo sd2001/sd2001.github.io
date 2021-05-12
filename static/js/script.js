@@ -169,7 +169,7 @@ mainbtn.addEventListener('mouseleave', (e) => {
 
 // About ME
 
-const projects = document.querySelectorAll('.card');
+let projects = document.querySelectorAll('.card');
 projects.forEach((project, i) => {
 	if (i >= 6) {
 		project.style.cssText = "display: none; opacity: 0;"
@@ -223,6 +223,8 @@ const hideprojects = (project, i) => {
 pbtn.addEventListener('click', (e) => {
 	e.preventDefault();
 	pbtn.firstElementChild.nextElementSibling.classList.toggle("change");
+	let projects = document.querySelectorAll('.card');
+
 	projects.forEach((project, i) => {
 		if (i >= 6) {
 			if (show) {

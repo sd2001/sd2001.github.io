@@ -554,7 +554,7 @@ html{
 	max-width: 40ch;
 	max-height: 60ch;
 	padding: clamp(18.5rem, 38vh, 20rem) 0rem 0rem;
-	background-image: url({{p.image.url}});
+	/* background-image: url({{p.image.url}}); */
 	background-size: cover;
 	color: white;
 	box-shadow: 0 1em 2em rgb(0 0 0 / 0.4);

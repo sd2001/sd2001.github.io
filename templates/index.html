@@ -157,7 +157,9 @@
 					<h2 class="card-title">{{p.name}}</h2>
 					<p>{{p.description}}</p>
 					<a href='{{p.github}}'' class="button">Github</a>
+					{% if p.live %}
 					<a href="{{p.live}}" class="button">It's Live</a>
+					{% endif %}
 				</div>
 			</div>
 			{% endfor %}			

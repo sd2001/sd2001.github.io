@@ -9,6 +9,17 @@ let mx = 0;
 let my = 0;
 let mousecirclebool = true;
 
+var myVar;
+
+function myFunction() {
+	myVar = setTimeout(showPage, 5000);
+}
+
+function showPage() {
+	document.getElementById("loader-container").style.display = "none";
+	document.getElementById("container").style.display = "block";
+}
+
 // var docWidth = document.documentElement.offsetWidth;
 
 // var all = document.getElementsByTagName("*"), i = 0, rect, docWidth = document.documentElement.offsetWidth;

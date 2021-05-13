@@ -204,6 +204,9 @@ pbtn.addEventListener("mouseleave", (e) => {
 let show = true;
 const showprojects = (project, i) => {
 	setTimeout(() => {
+		var projectimg = project.getElementsByTagName('img')[0].src;
+		console.log(projectimg);
+		project.style.cssText = `background-image: url(${projectimg});`;
 		project.style.display = 'flex';
 	}, 600);
 	setTimeout(() => {

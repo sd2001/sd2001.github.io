@@ -847,7 +847,7 @@ h1{
 	color: #fff;
 	text-transform: uppercase;
 	position: absolute;
-	top: 10%;
+	top: 20vh;
 	left: 10rem;
 	/* transform: translateY(-50%); */
 	width: 0;

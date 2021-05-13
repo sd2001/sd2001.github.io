@@ -6,10 +6,12 @@
    <img alt="JavaScript" src="https://img.shields.io/badge/javascript-%23323330.svg?&style=for-the-badge&logo=javascript&logoColor=%23F7DF1E"/><br>
     <img src="https://img.shields.io/badge/Backend%20-%20DJANGO-darkgreen?style=for-the-badge" />
     <img src="mockups/mockup1.jpg"/>
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" /><br>
+    <br><strong>This repo</strong> is available under MIT License, read the LICENSE file for more info
   </p>
  </div> 
- 
-  <p align='left'>
+ <br><br>
+  <p align='center'>
      <img src="https://img.shields.io/badge/References-red?style=for-the-badge">
     
      - https://codepen.io/samedkazan/pen/gOgNpzL

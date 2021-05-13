@@ -4,7 +4,7 @@ from .models import Projects, Messages
 # Create your views here.
 def home(request):
     # try:
-        projects = Projects.objects.all()[:6]
+        projects = Projects.objects.all()
         confirm = ""
         if request.method == 'POST':        
             name = request.POST.get('Name')

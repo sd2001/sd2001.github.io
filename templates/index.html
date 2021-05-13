@@ -5,23 +5,25 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Believer | Swarnabha &#169</title>	
+	<title>Believer | Swarnabha &#169</title>		
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>	
+
 </head>
-<body>
+<body onload="myFunction()" style="margin:0;">	
+	
+    <div id="loader-container">
+        <div id="loader"></div>
+    </div>
+   
+	<div id="container">
+
 	<!-- Mouse Animation -->
-	<div class="mouse-circle">
-
-	</div>
-	<div class="mouse-dot">
-
-	</div>
+	<div class="mouse-circle"></div>
+	<div class="mouse-dot"></div>
 	<!-- Page Container -->
-	<div class="container">
 		 <!-- Background -->
-		 <div class="page-bg">
-			
-		 </div>
+		 <div class="page-bg"></div>
 
 	<!-- Progress Bar -->
 	<a href="" class="progress-bar center sticky">
@@ -351,8 +353,12 @@
 			</h1>
 		</div>
 	</section>
-	</div>
-	
+	</div>	
+	<!-- <script>
+		$(window).on("load",function(){
+            $(".loader").fadeOut('slow');
+        });
+    </script> -->
 	<script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

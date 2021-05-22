@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from .models import Projects, Messages
+from django.http import FileResponse, HttpResponse
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 def home(request):
-    # try:
+    try:
         projects = Projects.objects.all()
         confirm = ""
         if request.method == 'POST':        
@@ -17,8 +19,20 @@ def home(request):
         
         value = {'projects': projects, 'confirm': confirm}    
         return render(request, 'index.html', value)
-    # except:
-    #     return render(request, 'error.html')
+    except:
+        return render(request, 'error.html')
 
 def error(request):
-    return render(request, 'error')
+    return render(request, 'error.html')
+
+def resume(request):
+    fs = FileSystemStorage()
+    filename = 'static/images/personal/Resume-May-2021.pdf'
+    if fs.exists(filename):
+        with fs.open(filename) as pdf:
+            response = HttpResponse(pdf, content_type = 'application/pdf')
+            response['Content-Disposition'] = f'inline; filename={filename}'
+            return response
+            
+    else:
+        return HttpResponse("Oops..Currently Resume isn't available!!")

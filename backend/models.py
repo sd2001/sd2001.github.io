@@ -6,8 +6,8 @@ class Projects(models.Model):
     name = models.CharField(max_length=30, null=False)
     description = models.CharField(max_length=100, null=False)
     image = CloudinaryField('image', default="https://res.cloudinary.com/sd2001/image/upload/v1620818730/temp_cvo0h5.jpg", null=True)
-    github = models.CharField(max_length=100, null=False)
-    live = models.CharField(max_length=100, null=True, blank=True)
+    github = models.TextField(max_length=100, null=False)
+    live = models.TextField(max_length=100, null=True, blank=True)
     
     def __str__(self):
         return self.name

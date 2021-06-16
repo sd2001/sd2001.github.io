@@ -9,6 +9,7 @@ let mx = 0;
 let my = 0;
 let mousecirclebool = true;
 
+
 var myVar;
 
 function myFunction() {
@@ -180,7 +181,7 @@ mainbtn.addEventListener('mouseleave', (e) => {
 
 // About ME
 
-let projects = document.querySelectorAll('.card');
+const projects = document.querySelectorAll('.card');
 projects.forEach((project, i) => {
 	if (i >= 6) {
 		project.style.cssText = "display: none; opacity: 0;"
@@ -215,9 +216,6 @@ pbtn.addEventListener("mouseleave", (e) => {
 let show = true;
 const showprojects = (project, i) => {
 	setTimeout(() => {
-		var projectimg = project.getElementsByTagName('img')[0].src;
-		console.log(projectimg);
-		project.style.cssText = `background-image: url(${projectimg});`;
 		project.style.display = 'flex';
 	}, 600);
 	setTimeout(() => {
@@ -237,8 +235,6 @@ const hideprojects = (project, i) => {
 pbtn.addEventListener('click', (e) => {
 	e.preventDefault();
 	pbtn.firstElementChild.nextElementSibling.classList.toggle("change");
-	let projects = document.querySelectorAll('.card');
-
 	projects.forEach((project, i) => {
 		if (i >= 6) {
 			if (show) {

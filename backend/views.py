@@ -25,13 +25,25 @@ def home(request):
 def error(request):
     return render(request, 'error.html')
 
-def resume(request):
+def cv(request):
     fs = FileSystemStorage()
     filename = 'static/images/personal/Resume-May-2021.pdf'
     if fs.exists(filename):
         with fs.open(filename) as pdf:
             response = HttpResponse(pdf, content_type = 'application/pdf')
-            response['Content-Disposition'] = f'inline; filename={filename}'
+            response['Content-Disposition'] = f"inline; filename=Swarnabha Resume.pdf"
+            return response
+            
+    else:
+        return HttpResponse("Oops..Currently Resume isn't available!!")
+    
+def resume(request):
+    fs = FileSystemStorage()
+    filename = 'static/images/personal/Resume-July-2021.pdf'
+    if fs.exists(filename):
+        with fs.open(filename) as pdf:
+            response = HttpResponse(pdf, content_type = 'application/pdf')
+            response['Content-Disposition'] = f"inline; filename=Swarnabha Resume.pdf"
             return response
             
     else:

@@ -33,7 +33,7 @@ export default function Gym({ theme, laptopActive, onRequestZoom }: Props) {
       <group position={[0.78, 0, 0.9]} rotation={[0, -0.4, 0]}>
         <Odds theme={theme} />
       </group>
-      <group position={[1.35, 0, 1.45]} rotation={[0, 0.9, 0]}>
+      <group position={[-1.35, 0, 2.75]} rotation={[0, 0.55, 0]}>
         <GymBag theme={theme} />
       </group>
 
@@ -58,7 +58,7 @@ export default function Gym({ theme, laptopActive, onRequestZoom }: Props) {
       <group position={[-4.55, 0, 1.15]} rotation={[0, 0.5, 0]}>
         <FlatBench theme={theme} />
       </group>
-      <group position={[2.55, 0, 1.9]} rotation={[0, -0.5, 0]}>
+      <group position={[4.75, 0, 0.55]} rotation={[0, -0.5, 0]}>
         <Kettlebells theme={theme} />
       </group>
       <group position={[-5.9, 0, 3.4]} rotation={[0, 0.25, 0]}>
@@ -68,11 +68,12 @@ export default function Gym({ theme, laptopActive, onRequestZoom }: Props) {
       {/* ---------------- PERSONAL CORNERS ---------------- */}
       {/* Guitar + amp, deliberately in the establishing shot rather than tucked in a
           corner — it should read alongside the gym and the Arsenal banner. */}
-      <group position={[-2.45, 0, 2.35]} rotation={[0, 0.62, 0]}>
+      <group position={[-2.35, 0, 1.55]} rotation={[0, 0.66, 0]}>
         <Guitar theme={theme} />
       </group>
-      {/* the dog, near the right wall in a pool of lamp light */}
-      <group position={[5.4, 0, 2.4]} rotation={[0, -0.5, 0]}>
+      {/* The dog sits in the near-right foreground, inside the pool thrown by the
+          lamp at (2.4, 3.05, 3.6) — far enough right to balance the guitar on the left. */}
+      <group position={[2.45, 0, 1.75]} rotation={[0, -0.85, 0]}>
         <Dog theme={theme} />
       </group>
 

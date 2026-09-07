@@ -16,19 +16,24 @@ function Lamp({ theme, position, cast = false }: { theme: Theme; position: [numb
         <cylinderGeometry args={[0.012, 0.012, ROOM.h - y, 6]} />
         <meshStandardMaterial color={theme.metalDark} roughness={0.8} />
       </mesh>
-      {/* dome shade */}
+      {/* dome shade — deeper, so the bulb sits up inside it rather than hanging below */}
       <mesh castShadow>
-        <sphereGeometry args={[0.34, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2.35]} />
+        <sphereGeometry args={[0.3, 24, 14, 0, Math.PI * 2, 0, Math.PI / 1.75]} />
         <meshStandardMaterial
-          color={theme.name === 'arsenal' ? theme.accent : '#1b1b1e'}
-          roughness={0.42}
-          metalness={0.55}
+          color={theme.name === 'arsenal' ? theme.accent : '#1a1a1d'}
+          roughness={0.38}
+          metalness={0.6}
           side={THREE.DoubleSide}
         />
       </mesh>
-      {/* glowing element */}
-      <mesh position={[0, -0.05, 0]}>
-        <sphereGeometry args={[0.11, 16, 12]} />
+      {/* hot inner surface of the shade, catching the bulb */}
+      <mesh position={[0, -0.02, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.26, 24]} />
+        <meshBasicMaterial color={theme.lamp} toneMapped={false} transparent opacity={0.5} />
+      </mesh>
+      {/* bulb, tucked up into the shade */}
+      <mesh position={[0, -0.04, 0]}>
+        <sphereGeometry args={[0.055, 14, 12]} />
         <meshBasicMaterial color={theme.lamp} toneMapped={false} />
       </mesh>
       <pointLight
@@ -119,9 +124,10 @@ export default function Room({ theme }: { theme: Theme }) {
         <planeGeometry args={[4.4, 3.6]} />
         <meshStandardMaterial color={theme.rubber} roughness={0.95} metalness={0.02} />
       </mesh>
+      {/* Painted platform boundary — matte, so it does not compete with the laptop. */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, -0.4]}>
-        <ringGeometry args={[2.15, 2.22, 4, 1, Math.PI / 4]} />
-        <meshBasicMaterial color={theme.accent} toneMapped={false} opacity={0.55} transparent />
+        <ringGeometry args={[2.15, 2.19, 4, 1, Math.PI / 4]} />
+        <meshStandardMaterial color={theme.floorLine} roughness={0.95} metalness={0.0} />
       </mesh>
 
       {/* ---------- WALLS ---------- */}
@@ -135,9 +141,10 @@ export default function Room({ theme }: { theme: Theme }) {
         <planeGeometry args={[ROOM.w, 1.3]} />
         <meshStandardMaterial map={lowerTex} color={theme.wallLower} roughness={0.9} />
       </mesh>
+      {/* A painted band, lit like the wall it is on — emissive here read as a laser. */}
       <mesh position={[0, 1.34, -halfD + 0.03]}>
-        <planeGeometry args={[ROOM.w, 0.09]} />
-        <meshBasicMaterial color={theme.wallStripe} toneMapped={false} />
+        <planeGeometry args={[ROOM.w, 0.07]} />
+        <meshStandardMaterial color={theme.wallStripe} roughness={0.92} metalness={0.0} />
       </mesh>
 
       {/* left */}
@@ -184,17 +191,25 @@ export default function Room({ theme }: { theme: Theme }) {
       </group>
 
       {/* ---------- BACK-WALL BANNER (Arsenal title) ---------- */}
-      <group position={[4.5, 2.45, -halfD + 0.08]}>
+      <group position={[3.05, 2.3, -halfD + 0.08]}>
+        {/* Backlit print, not a light source — a small emissive lift keeps it alive
+            in the dark without blowing out the corner of the room. */}
         <mesh>
-          <planeGeometry args={[3.4, 1.91]} />
-          <meshBasicMaterial map={banner} toneMapped={false} />
+          <planeGeometry args={[2.55, 1.43]} />
+          <meshStandardMaterial
+            map={banner}
+            emissiveMap={banner}
+            emissive="#ffffff"
+            emissiveIntensity={isDark ? 0.42 : 0.16}
+            roughness={0.72}
+            metalness={0.03}
+          />
         </mesh>
         <mesh position={[0, 0, -0.03]}>
-          <planeGeometry args={[3.56, 2.07]} />
+          <planeGeometry args={[2.7, 1.58]} />
           <meshStandardMaterial color={theme.metalDark} roughness={0.45} metalness={0.6} />
         </mesh>
-        {/* the banner throws a little red light onto the wall */}
-        <pointLight position={[0, 0, 0.9]} color="#ff2b21" intensity={isDark ? 5 : 2} distance={5} decay={2} />
+        <pointLight position={[0, 0, 0.8]} color="#ff4a3d" intensity={isDark ? 2.6 : 1.1} distance={4.2} decay={2} />
       </group>
 
       {/* ---------- CEILING STRUCTURE ---------- */}

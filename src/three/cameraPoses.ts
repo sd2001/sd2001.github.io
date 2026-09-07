@@ -6,8 +6,8 @@ export const FOV = 45;
 
 /** Wide establishing shot, slightly off-axis so the room reads as a space. */
 export const INTRO = {
-  pos: new THREE.Vector3(3.1, 2.35, 6.2),
-  target: new THREE.Vector3(-0.15, 0.95, -0.35),
+  pos: new THREE.Vector3(1.15, 2.18, 6.35),
+  target: new THREE.Vector3(-0.1, 0.95, -0.55),
 };
 
 /** Mid shot — off the machine, laptop legible but the room still visible. Also the free-look anchor. */

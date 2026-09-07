@@ -1,0 +1,69 @@
+# Builds the Vite app and publishes it to GitHub Pages.
+#
+# This repo is a *user site* (sd2001.github.io), so the published output is served
+# from the domain root — which is why vite.config.ts sets base: '/'.
+#
+# One-time setup in the repo: Settings → Pages → Build and deployment → Source:
+# "GitHub Actions". No gh-pages branch is needed.
+name: Deploy portfolio to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Allow the workflow to publish Pages using OIDC rather than a PAT.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once; cancel a queued one rather than an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      # The old Django-era site lives in V1/ and is not part of the build, but it is
+      # worth keeping reachable at /V1/ so old links and screenshots still resolve.
+      - name: Include the archived V1 site
+        run: |
+          mkdir -p dist/V1
+          cp -R V1/. dist/V1/
+          # Nothing here is a Jekyll site; stop Pages trying to process it.
+          touch dist/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

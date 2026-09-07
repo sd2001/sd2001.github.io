@@ -10,15 +10,23 @@ import type { Theme } from '../theme';
 
 export function Guitar({ theme }: { theme: Theme }) {
   const bodyShape = useMemo(() => {
-    // A double-cutaway outline drawn with beziers, extruded into the guitar body.
+    // Double-cutaway outline, Strat-ish proportions: widest across the lower bout,
+    // pinched at the waist, two horns at the top with the bass horn reaching further.
+    // The previous outline was too tall and narrow and read as a paddle.
     const s = new THREE.Shape();
-    s.moveTo(0, 0.30);
-    s.bezierCurveTo(0.10, 0.30, 0.17, 0.24, 0.175, 0.15);
-    s.bezierCurveTo(0.18, 0.06, 0.13, 0.02, 0.145, -0.06);
-    s.bezierCurveTo(0.165, -0.18, 0.11, -0.30, 0.0, -0.30);
-    s.bezierCurveTo(-0.11, -0.30, -0.165, -0.18, -0.145, -0.06);
-    s.bezierCurveTo(-0.13, 0.02, -0.18, 0.06, -0.175, 0.15);
-    s.bezierCurveTo(-0.17, 0.24, -0.10, 0.30, 0, 0.30);
+    s.moveTo(0.035, 0.195);
+    // treble horn, then down the upper bout
+    s.bezierCurveTo(0.105, 0.225, 0.158, 0.192, 0.156, 0.112);
+    // waist
+    s.bezierCurveTo(0.152, 0.052, 0.104, 0.030, 0.116, -0.030);
+    // lower bout, right side into the bottom
+    s.bezierCurveTo(0.132, -0.132, 0.100, -0.243, 0.0, -0.248);
+    // mirror back up the left
+    s.bezierCurveTo(-0.100, -0.243, -0.132, -0.132, -0.116, -0.030);
+    s.bezierCurveTo(-0.104, 0.030, -0.152, 0.052, -0.156, 0.112);
+    // bass horn — longer, as on a real double cutaway
+    s.bezierCurveTo(-0.160, 0.200, -0.098, 0.248, -0.035, 0.212);
+    s.lineTo(0.035, 0.195);
     return s;
   }, []);
 
@@ -84,12 +92,12 @@ export function Guitar({ theme }: { theme: Theme }) {
           />
         </mesh>
         {/* scratchplate */}
-        <mesh position={[0.01, -0.03, 0.028]}>
-          <circleGeometry args={[0.1, 20]} />
+        <mesh position={[0.008, -0.035, 0.028]} scale={[1, 1.15, 1]}>
+          <circleGeometry args={[0.088, 20]} />
           <meshStandardMaterial color="#0f1013" roughness={0.35} metalness={0.2} />
         </mesh>
         {/* pickups */}
-        {[0.02, -0.09].map((y, i) => (
+        {[-0.005, -0.105].map((y, i) => (
           <mesh key={i} position={[0, y, 0.03]} castShadow>
             <boxGeometry args={[0.11, 0.026, 0.012]} />
             <meshStandardMaterial color="#c8c2b0" roughness={0.4} metalness={0.7} />
@@ -101,7 +109,7 @@ export function Guitar({ theme }: { theme: Theme }) {
           <meshStandardMaterial color="#cfd3d8" roughness={0.25} metalness={0.95} />
         </mesh>
         {/* control knobs */}
-        {[[-0.075, -0.2], [-0.045, -0.235], [0.075, -0.2]].map(([x, y], i) => (
+        {[[-0.072, -0.212], [-0.042, -0.242], [0.072, -0.212]].map(([x, y], i) => (
           <mesh key={i} position={[x, y, 0.034]} rotation={[Math.PI / 2, 0, 0]} castShadow>
             <cylinderGeometry args={[0.014, 0.014, 0.014, 12]} />
             <meshStandardMaterial color="#dcd6c4" roughness={0.35} metalness={0.5} />
@@ -109,37 +117,37 @@ export function Guitar({ theme }: { theme: Theme }) {
         ))}
 
         {/* neck */}
-        <mesh position={[0, 0.53, 0.005]} castShadow>
-          <boxGeometry args={[0.052, 0.62, 0.022]} />
+        <mesh position={[0, 0.47, 0.005]} castShadow>
+          <boxGeometry args={[0.05, 0.64, 0.022]} />
           <meshStandardMaterial color="#7a4a24" roughness={0.5} />
         </mesh>
         {/* fretboard */}
-        <mesh position={[0, 0.53, 0.018]}>
-          <boxGeometry args={[0.05, 0.62, 0.006]} />
+        <mesh position={[0, 0.47, 0.018]}>
+          <boxGeometry args={[0.048, 0.64, 0.006]} />
           <meshStandardMaterial color="#241309" roughness={0.55} />
         </mesh>
         {/* frets */}
         {Array.from({ length: 16 }, (_, i) => (
-          <mesh key={i} position={[0, 0.26 + i * 0.036, 0.0215]}>
-            <boxGeometry args={[0.05, 0.0018, 0.001]} />
+          <mesh key={i} position={[0, 0.20 + i * 0.037, 0.0215]}>
+            <boxGeometry args={[0.048, 0.0018, 0.001]} />
             <meshStandardMaterial color="#c9ced6" roughness={0.25} metalness={0.95} />
           </mesh>
         ))}
         {/* strings */}
         {Array.from({ length: 6 }, (_, i) => (
-          <mesh key={i} position={[-0.021 + i * 0.0084, 0.33, 0.026]}>
-            <boxGeometry args={[0.0009, 1.08, 0.0009]} />
+          <mesh key={i} position={[-0.020 + i * 0.008, 0.30, 0.026]}>
+            <boxGeometry args={[0.0009, 1.05, 0.0009]} />
             <meshStandardMaterial color="#d8dce2" roughness={0.2} metalness={1} />
           </mesh>
         ))}
         {/* headstock */}
-        <mesh position={[0.008, 0.88, 0.004]} rotation={[0, 0, 0.06]} castShadow>
-          <boxGeometry args={[0.072, 0.16, 0.02]} />
+        <mesh position={[0.008, 0.845, 0.004]} rotation={[0, 0, 0.06]} castShadow>
+          <boxGeometry args={[0.07, 0.165, 0.02]} />
           <meshStandardMaterial color="#3b0d12" roughness={0.25} metalness={0.3} />
         </mesh>
         {/* tuners */}
         {Array.from({ length: 6 }, (_, i) => (
-          <mesh key={i} position={[(i % 2 ? 0.045 : -0.03), 0.83 + Math.floor(i / 2) * 0.04, 0.018]} castShadow>
+          <mesh key={i} position={[(i % 2 ? 0.043 : -0.028), 0.795 + Math.floor(i / 2) * 0.042, 0.018]} castShadow>
             <cylinderGeometry args={[0.007, 0.007, 0.012, 8]} />
             <meshStandardMaterial color="#cfd3d8" roughness={0.3} metalness={0.9} />
           </mesh>
@@ -194,6 +202,17 @@ export function Dog({ theme }: { theme: Theme }) {
 
   return (
     <group>
+      {/* A soft key on the bed — without it the dog reads as a dark lump on a dark floor. */}
+      <spotLight
+        position={[0.6, 2.6, 1.2]}
+        target-position={[0, 0.2, 0]}
+        color={theme.name === 'arsenal' ? '#fff4e8' : '#ffd9b4'}
+        intensity={16}
+        angle={0.5}
+        penumbra={0.9}
+        distance={6}
+        decay={2}
+      />
       {/* bed */}
       <mesh position={[0, 0.045, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.52, 0.5, 0.09, 28]} />
@@ -316,6 +335,11 @@ export function NeonSign({ theme, text = 'ONE MORE REP' }: { theme: Theme; text?
 
   return (
     <group>
+      {/* Backer panel — without it the tube washes out against a pale wall. */}
+      <mesh position={[0, 0, -0.02]}>
+        <planeGeometry args={[2.78, 0.82]} />
+        <meshStandardMaterial color="#121215" roughness={0.85} metalness={0.2} />
+      </mesh>
       <mesh>
         <planeGeometry args={[2.6, 0.65]} />
         <meshBasicMaterial map={tex} transparent toneMapped={false} depthWrite={false} />

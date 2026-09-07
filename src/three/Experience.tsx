@@ -2,7 +2,7 @@ import { Suspense, useMemo } from 'react';
 import * as THREE from 'three';
 import { advance, Canvas } from '@react-three/fiber';
 import { AdaptiveDpr, OrbitControls, Preload } from '@react-three/drei';
-import { Bloom, EffectComposer, Noise, SMAA, Vignette } from '@react-three/postprocessing';
+import { Bloom, EffectComposer, Noise, Vignette } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import CameraRig from './CameraRig';
 import { APPROACH, type CamMode } from './cameraPoses';
@@ -87,7 +87,11 @@ export default function Experience({ themeName, mode, onArrive, onRequestZoom, l
         <Preload all />
       </Suspense>
 
-      <EffectComposer multisampling={0} enableNormalPass={false}>
+      {/* MSAA rather than SMAA: the scene is full of thin metal edges (rack uprights,
+          base rails, the bed rim) and post-process AA left them sparkling. Multisampling
+          resolves them properly. Grain stays subtle — at 0.42 SOFT_LIGHT was amplifying
+          highlights into white speckle on the bright Arsenal theme. */}
+      <EffectComposer multisampling={4} enableNormalPass={false}>
         <Bloom
           intensity={theme.bloom.intensity}
           luminanceThreshold={theme.bloom.threshold}
@@ -95,8 +99,7 @@ export default function Experience({ themeName, mode, onArrive, onRequestZoom, l
           mipmapBlur
         />
         <Vignette eskil={false} offset={0.24} darkness={theme.vignette} />
-        <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} opacity={0.42} />
-        <SMAA />
+        <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} opacity={0.13} />
       </EffectComposer>
     </Canvas>
   );

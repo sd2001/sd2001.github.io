@@ -9,10 +9,10 @@ import { knurl } from '../textures';
  * ------------------------------------------------------------------ */
 
 function Frame({ theme, ...p }: { theme: Theme } & JSX.IntrinsicElements['meshStandardMaterial']) {
-  return <meshStandardMaterial color={theme.metal} roughness={0.44} metalness={0.85} {...p} />;
+  return <meshStandardMaterial color={theme.metal} roughness={0.55} metalness={0.7} {...p} />;
 }
 function DarkFrame({ theme, ...p }: { theme: Theme } & JSX.IntrinsicElements['meshStandardMaterial']) {
-  return <meshStandardMaterial color={theme.metalDark} roughness={0.55} metalness={0.8} {...p} />;
+  return <meshStandardMaterial color={theme.metalDark} roughness={0.62} metalness={0.68} {...p} />;
 }
 function Vinyl({ theme, ...p }: { theme: Theme } & JSX.IntrinsicElements['meshStandardMaterial']) {
   return <meshStandardMaterial color={theme.pad} roughness={0.62} metalness={0.06} {...p} />;
@@ -266,13 +266,16 @@ export function DumbbellRack({ theme }: { theme: Theme }) {
 
 /** Power rack with a loaded barbell sitting in the J-hooks. */
 export function PowerRack({ theme }: { theme: Theme }) {
+  // Club red belongs on the rack in the Arsenal room; in the warehouse it just
+  // competes with the neon, so the rack stays dark steel there.
+  const rackColor = theme.name === 'arsenal' ? theme.accentDim : theme.metalDark;
   return (
     <group>
       {/* four uprights */}
       {[[-0.72, -0.5], [0.72, -0.5], [-0.72, 0.62], [0.72, 0.62]].map(([x, z], i) => (
         <mesh key={i} position={[x, 1.15, z]} castShadow receiveShadow>
           <boxGeometry args={[0.1, 2.3, 0.1]} />
-          <meshStandardMaterial color={theme.accentDim} roughness={0.5} metalness={0.7} />
+          <meshStandardMaterial color={rackColor} roughness={0.5} metalness={0.7} />
         </mesh>
       ))}
       {/* hole pattern down the front uprights */}
@@ -288,7 +291,7 @@ export function PowerRack({ theme }: { theme: Theme }) {
       {[-0.5, 0.62].map((z) => (
         <mesh key={z} position={[0, 2.28, z]} castShadow>
           <boxGeometry args={[1.54, 0.1, 0.1]} />
-          <meshStandardMaterial color={theme.accentDim} roughness={0.5} metalness={0.7} />
+          <meshStandardMaterial color={rackColor} roughness={0.5} metalness={0.7} />
         </mesh>
       ))}
       {/* pull-up bar */}
@@ -470,9 +473,11 @@ export function Odds({ theme }: { theme: Theme }) {
           <cylinderGeometry args={[0.13, 0.1, 0.11, 20, 1, true]} />
           <meshStandardMaterial color={theme.metalDark} roughness={0.7} side={THREE.DoubleSide} />
         </mesh>
+        {/* Slightly grey and fully rough: pure white here caught the screen's
+            area light and glowed like a puck. */}
         <mesh position={[0, 0.085, 0]}>
           <cylinderGeometry args={[0.115, 0.115, 0.03, 20]} />
-          <meshStandardMaterial color="#eceae6" roughness={1} />
+          <meshStandardMaterial color="#9a9894" roughness={1} metalness={0} />
         </mesh>
       </group>
     </group>

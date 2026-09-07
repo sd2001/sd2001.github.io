@@ -66,14 +66,6 @@ export default function CameraRig({ mode, onArrive, paused }: Props) {
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
 
-    // TEMP DIAGNOSTIC
-    (window as unknown as Record<string, unknown>).__rig = {
-      propMode: mode,
-      activeMode: activeMode.current,
-      settled: settled.current,
-      t: +t.current.toFixed(3),
-      pos: camera.position.toArray().map((n) => +n.toFixed(2)),
-    };
 
     // ---- detect a mode change without relying on effects ----
     if (activeMode.current !== mode) {

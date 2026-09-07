@@ -1,0 +1,138 @@
+:root {
+  --hud: #e9edf4;
+  --hud-dim: #8d95a5;
+  --hud-bg: rgba(8, 9, 13, 0.82);
+  --hud-line: rgba(255, 255, 255, 0.18);
+  --accent: #ef0107;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  background: #06070a; overflow: hidden;
+}
+body {
+  font-family: var(--sans);
+  color: var(--hud);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+canvas { display: block; touch-action: none; }
+
+/* ==========================================================================
+   START SCREEN
+   ========================================================================== */
+.start {
+  position: fixed; inset: 0; z-index: 1000;
+  display: grid; place-items: center;
+  background: #04050a;
+  transition: opacity 700ms ease, visibility 700ms;
+}
+.start.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.start-card {
+  border: 2px solid var(--hud); padding: 26px 34px 30px;
+  font-family: var(--mono); text-align: left; max-width: 560px;
+  box-shadow: 0 0 60px rgba(255,255,255,0.05);
+}
+.start-card .l1 { font-size: 15px; letter-spacing: 0.02em; }
+.start-card .l2 { font-size: 15px; color: var(--hud-dim); margin-top: 2px; }
+.start-card .meta { font-size: 12px; color: #5e6779; margin-top: 14px; line-height: 1.8; }
+.start-card .meta b { color: #93a0b6; font-weight: 500; }
+.start-btn {
+  display: block; margin: 22px auto 0; padding: 7px 26px;
+  border: 2px solid var(--hud); background: transparent; color: var(--hud);
+  font-family: var(--mono); font-size: 15px; letter-spacing: 0.1em; cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+.start-btn:hover { background: var(--hud); color: #04050a; }
+.start-warm { text-align: center; font-family: var(--mono); font-size: 12px; color: #4a5266; margin-top: 14px; }
+
+/* ==========================================================================
+   HUD
+   ========================================================================== */
+.hud { position: fixed; inset: 0; z-index: 500; pointer-events: none; font-family: var(--mono); }
+.hud > * { pointer-events: auto; }
+
+.hud-tl { position: absolute; top: 18px; left: 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.hud-box {
+  background: var(--hud-bg); border: 1px solid var(--hud-line);
+  padding: 4px 10px; font-size: 12.5px; letter-spacing: 0.01em;
+  backdrop-filter: blur(10px);
+}
+.hud-box.dim { color: var(--hud-dim); font-size: 11.5px; }
+.hud-box.time { display: flex; align-items: center; gap: 10px; }
+.hud-box .sq { width: 7px; height: 7px; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+
+.hud-tr { position: absolute; top: 18px; right: 18px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.hud-btn {
+  background: var(--hud-bg); border: 1px solid var(--hud-line); color: var(--hud);
+  padding: 5px 11px; font-family: var(--mono); font-size: 11.5px; cursor: pointer;
+  backdrop-filter: blur(10px); transition: background 130ms, border-color 130ms;
+  display: flex; align-items: center; gap: 7px;
+}
+.hud-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); }
+.hud-btn.on { border-color: var(--accent); color: #ff8d82; }
+
+.hud-switch { display: flex; border: 1px solid var(--hud-line); background: var(--hud-bg); backdrop-filter: blur(10px); }
+.hud-switch button {
+  background: none; border: none; color: var(--hud-dim); font-family: var(--mono); font-size: 11px;
+  padding: 5px 10px; cursor: pointer; transition: background 130ms, color 130ms;
+}
+.hud-switch button + button { border-left: 1px solid var(--hud-line); }
+.hud-switch button.on { background: var(--accent); color: #fff; }
+
+.hud-bottom {
+  position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+}
+.hud-prompt {
+  background: var(--hud-bg); border: 1px solid var(--hud-line); backdrop-filter: blur(10px);
+  padding: 6px 14px; font-size: 12.5px; letter-spacing: 0.02em; white-space: nowrap;
+  animation: hud-pulse 2.4s ease-in-out infinite;
+}
+@keyframes hud-pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+.hud-actions { display: flex; gap: 8px; }
+
+.hud-bl { position: absolute; bottom: 20px; left: 18px; display: flex; flex-direction: column; gap: 5px; }
+.hud-social { display: flex; gap: 6px; }
+.hud-social a {
+  width: 30px; height: 30px; display: grid; place-items: center;
+  background: var(--hud-bg); border: 1px solid var(--hud-line); color: var(--hud-dim);
+  font-size: 12px; text-decoration: none; backdrop-filter: blur(10px); transition: all 130ms;
+}
+.hud-social a:hover { color: #fff; border-color: var(--accent); background: rgba(239,1,7,0.25); }
+.hud-hint { font-size: 10.5px; color: #5b6376; letter-spacing: 0.04em; }
+
+/* ==========================================================================
+   ROTATE / UNSUPPORTED NOTICES
+   ========================================================================== */
+.notice {
+  position: fixed; inset: 0; z-index: 1200; display: none; place-items: center;
+  background: #04050a; padding: 30px; text-align: center;
+}
+.notice .inner { max-width: 420px; font-family: var(--mono); font-size: 13px; line-height: 1.75; color: var(--hud-dim); }
+.notice .inner b { color: var(--hud); display: block; font-size: 15px; margin-bottom: 10px; }
+
+/* On short/narrow screens the 3D scene is not the right experience. */
+@media (max-width: 700px), (max-height: 430px) {
+  .notice.mobile { display: grid; }
+}
+
+/* ==========================================================================
+   ATTRIBUTION — always visible, bottom-right
+   ========================================================================== */
+.hud-credit {
+  position: absolute; bottom: 20px; right: 18px;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+}
+.hud-credit-line {
+  background: var(--hud-bg); border: 1px solid var(--hud-line); backdrop-filter: blur(10px);
+  padding: 5px 11px; font-size: 11px; color: var(--hud-dim); letter-spacing: 0.01em;
+}
+.hud-credit-line a { color: #93a0b6; text-decoration: none; border-bottom: 1px solid rgba(147,160,182,0.42); }
+.hud-credit-line a:hover { color: #fff; border-bottom-color: var(--accent); }

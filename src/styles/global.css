@@ -1,4 +1,6 @@
 :root {
+  /* height of the 3D hero band on phones */
+  --hero-h: min(42vh, 380px);
   --hud: #e9edf4;
   --hud-dim: #8d95a5;
   --hud-bg: rgba(8, 9, 13, 0.82);
@@ -109,21 +111,6 @@ canvas { display: block; touch-action: none; }
 .hud-hint { font-size: 10.5px; color: #5b6376; letter-spacing: 0.04em; }
 
 /* ==========================================================================
-   ROTATE / UNSUPPORTED NOTICES
-   ========================================================================== */
-.notice {
-  position: fixed; inset: 0; z-index: 1200; display: none; place-items: center;
-  background: #04050a; padding: 30px; text-align: center;
-}
-.notice .inner { max-width: 420px; font-family: var(--mono); font-size: 13px; line-height: 1.75; color: var(--hud-dim); }
-.notice .inner b { color: var(--hud); display: block; font-size: 15px; margin-bottom: 10px; }
-
-/* On short/narrow screens the 3D scene is not the right experience. */
-@media (max-width: 700px), (max-height: 430px) {
-  .notice.mobile { display: grid; }
-}
-
-/* ==========================================================================
    ATTRIBUTION — always visible, bottom-right
    ========================================================================== */
 .hud-credit {
@@ -136,3 +123,25 @@ canvas { display: block; touch-action: none; }
 }
 .hud-credit-line a { color: #93a0b6; text-decoration: none; border-bottom: 1px solid rgba(147,160,182,0.42); }
 .hud-credit-line a:hover { color: #fff; border-bottom-color: var(--accent); }
+
+/* The phone shell replaces all of this below 820px; these are belt-and-braces so a
+   narrow desktop window degrades rather than overlapping. */
+@media (max-width: 900px) {
+  .hud-bl, .hud-credit .hud-btn { display: none; }
+  .hud-tl .hud-box.dim { display: none; }
+}
+
+/* ==========================================================================
+   STAGE — the one place the WebGL canvas ever lives
+   ========================================================================== */
+.stage { position: fixed; inset: 0; z-index: 0; }
+
+/* On phones the canvas becomes a hero band pinned to the top; the page scrolls over it.
+   Only the CSS changes — the element never moves in the React tree, so the WebGL
+   context is never torn down when the viewport crosses the breakpoint. */
+.stage.stage-hero { inset: 0 0 auto 0; height: var(--hero-h); }
+.stage-fade {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 45%;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(11,13,18,0) 0%, rgba(11,13,18,0.8) 65%, #0b0d12 100%);
+}

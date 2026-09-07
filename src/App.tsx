@@ -1,12 +1,40 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Experience from './three/Experience';
 import Hud from './ui/Hud';
 import StartScreen from './ui/StartScreen';
+import MobileShell from './ui/MobileShell';
+import SceneBoundary from './ui/SceneBoundary';
+import { useDevice } from './ui/useDevice';
 import type { CamMode } from './three/cameraPoses';
 import { DEFAULT_THEME, type ThemeName } from './three/theme';
 import { osBus } from './os/bus';
 
 export default function App() {
+  const device = useDevice();
+  const stageRef = useRef<HTMLDivElement>(null);
+
+  /*
+   * Do not mount the Canvas until the stage actually has dimensions.
+   *
+   * react-three-fiber only configures its root once the container measures non-zero, and
+   * a zero-size first paint (a background tab, a collapsed pane, a hidden iframe) leaves
+   * it half-initialised — its Provider then calls events.connect() on a root element that
+   * is no longer attached and throws. Waiting for a real size removes that window.
+   */
+  const [stageSized, setStageSized] = useState(false);
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const check = () => {
+      const r = el.getBoundingClientRect();
+      setStageSized(r.width > 0 && r.height > 0);
+    };
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const [started, setStarted] = useState(false);
   const [ready, setReady] = useState(false);
   const [mode, setMode] = useState<CamMode>('intro');
@@ -15,7 +43,7 @@ export default function App() {
 
   // The scene is fully procedural, so "ready" is really "the first frames have compiled".
   useEffect(() => {
-    const t = setTimeout(() => setReady(true), 900);
+    const t = setTimeout(() => setReady(true), 700);
     return () => clearTimeout(t);
   }, []);
 
@@ -24,12 +52,8 @@ export default function App() {
     setMode(m);
   }, []);
 
-  const onArrive = useCallback((m: CamMode) => {
-    setArrived(true);
-    void m;
-  }, []);
+  const onArrive = useCallback(() => setArrived(true), []);
 
-  // Esc steps back out of the machine.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && mode === 'monitor') go('intro');
@@ -40,48 +64,53 @@ export default function App() {
 
   const laptopActive = mode === 'monitor' && arrived;
 
-  // Credits live in a window on the laptop, so fly to the screen and ask the OS to
-  // open it. The bus holds the request if the desktop has not booted yet.
-  const showCredits = useCallback(() => {
-    if (mode !== 'monitor') go('monitor');
-    osBus.openApp('credits');
-  }, [mode, go]);
-
   return (
     <>
-      <Experience
-        themeName={themeName}
-        mode={mode}
-        onArrive={onArrive}
-        onRequestZoom={() => go('monitor')}
-        laptopActive={laptopActive}
-        paused={!started}
-        arrived={arrived}
-      />
-
-      {started && (
-        <Hud
-          mode={mode}
-          arrived={arrived}
-          themeName={themeName}
-          onTheme={setThemeName}
-          onEnter={() => go('monitor')}
-          onBack={() => go('intro')}
-          onFree={() => go('free')}
-          onCredits={showCredits}
-        />
-      )}
-
-      <StartScreen gone={started} ready={ready} onStart={() => setStarted(true)} />
-
-      <div className="notice mobile">
-        <div className="inner">
-          <b>This one wants a bigger screen.</b>
-          The portfolio is a 3D room with a laptop you sit down at, and it needs the width to work.
-          Open it on a desktop — or reach me at{' '}
-          <a href="mailto:im.swarnabha2001@gmail.com" style={{ color: '#ff8d82' }}>im.swarnabha2001@gmail.com</a>.
-        </div>
+      {/*
+        The canvas lives here and only here, in a wrapper that never unmounts. Moving it
+        into a phone-specific subtree remounts the whole WebGL root on every breakpoint
+        crossing — a rotated phone was enough to tear it down — so the phone layout only
+        changes this element's CSS, never its position in the tree.
+      */}
+      <div ref={stageRef} className={`stage${device.isPhone ? ' stage-hero' : ''}`}>
+        {stageSized && (
+          <SceneBoundary>
+            <Experience
+              themeName={themeName}
+              mode={mode}
+              onArrive={onArrive}
+              onRequestZoom={() => go('monitor')}
+              laptopActive={laptopActive}
+              paused={!started && !device.isPhone}
+              tier={device.tier}
+              hero={device.isPhone}
+            />
+          </SceneBoundary>
+        )}
+        {device.isPhone && <div className="stage-fade" />}
       </div>
+
+      {device.isPhone ? (
+        <MobileShell />
+      ) : (
+        <>
+          {started && (
+            <Hud
+              mode={mode}
+              arrived={arrived}
+              themeName={themeName}
+              onTheme={setThemeName}
+              onEnter={() => go('monitor')}
+              onBack={() => go('intro')}
+              onCredits={() => {
+                if (mode !== 'monitor') go('monitor');
+                osBus.openApp('credits');
+              }}
+            />
+          )}
+          <StartScreen gone={started} ready={ready} onStart={() => setStarted(true)} />
+        </>
+      )}
     </>
   );
 }

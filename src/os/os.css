@@ -306,3 +306,91 @@
 
 .bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.09); overflow: hidden; }
 .bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 3px; }
+
+
+/* ==========================================================================
+   FLOW VARIANT — used by the phone layout. Same tokens and app styles, but the
+   container is a normal block instead of a fixed 1280x800 screen.
+   ========================================================================== */
+.os.os-flow {
+  position: static;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+  background: transparent;
+}
+.os.os-flow .app { padding: 18px 16px 28px; font-size: 14.5px; line-height: 1.65; }
+.os.os-flow .app h1 { font-size: 26px; }
+.os.os-flow .app h2 { font-size: 16px; margin-top: 28px; }
+.os.os-flow .grid2,
+.os.os-flow .grid3,
+.os.os-flow .grid4 { grid-template-columns: 1fr; }
+.os.os-flow .tl { padding-left: 20px; }
+.os.os-flow .tl-head { flex-direction: column; gap: 2px; }
+.os.os-flow .bul { font-size: 14px; }
+.os.os-flow .term { font-size: 13px; border-radius: 10px; }
+.os.os-flow .stat .v { font-size: 26px; }
+
+@media (min-width: 560px) {
+  .os.os-flow .grid2, .os.os-flow .grid4 { grid-template-columns: 1fr 1fr; }
+}
+
+/* ==========================================================================
+   PHONE SHELL
+   ========================================================================== */
+.m-shell {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  background: transparent; color: #e8ecf4;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+.m-hero-spacer {
+  position: relative; width: 100%;
+  height: var(--hero-h);
+  /* transparent, so the fixed canvas behind shows through */
+}
+.m-hero-copy { position: absolute; left: 16px; right: 16px; bottom: 10px; pointer-events: none; }
+.m-hero-name { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.m-hero-role {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 12px; color: #ff8d82; margin-top: 2px;
+}
+
+.m-tabs {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; gap: 7px; padding: 10px 12px;
+  overflow-x: auto; scrollbar-width: none;
+  background: rgba(11,13,18,0.94);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.09);
+}
+.m-tabs::-webkit-scrollbar { display: none; }
+.m-tab {
+  flex: none; display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 13px; border-radius: 999px; white-space: nowrap;
+  font-size: 13px; font-weight: 500; color: #9aa3b4;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  /* comfortable tap target */
+  min-height: 38px;
+}
+.m-tab.on { background: #ef0107; border-color: #ef0107; color: #fff; }
+
+.m-body { padding: 0 2px; background: #0b0d12; }
+
+.m-foot {
+  background: #0b0d12;
+  padding: 26px 18px calc(30px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255,255,255,0.09);
+  text-align: center; color: #6b7383; font-size: 12px; line-height: 1.7;
+}
+.m-foot a { color: #93a0b6; }
+.m-foot-note { color: #4f5768; font-size: 11.5px; margin-top: 8px; }
+.m-socials { display: flex; justify-content: center; gap: 10px; margin-bottom: 14px; }
+.m-socials a {
+  width: 40px; height: 40px; display: grid; place-items: center;
+  border-radius: 10px; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1); color: #9aa3b4;
+  font-size: 14px; text-decoration: none;
+}

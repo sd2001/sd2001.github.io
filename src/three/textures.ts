@@ -188,6 +188,56 @@ export function radialFalloff(color = '#000', power = 1) {
   return tex;
 }
 
+
+/**
+ * Laptop keyboard drawn as a texture. This was 70 individual box meshes, which is a lot
+ * of scene graph for something the size of a postage stamp on screen.
+ */
+export function keyboardFace() {
+  const key = 'keyboard';
+  if (cache.has(key)) return cache.get(key)!;
+  const cv = document.createElement('canvas');
+  cv.width = 1024; cv.height = 560;
+  const ctx = cv.getContext('2d')!;
+
+  ctx.fillStyle = '#101115';
+  ctx.fillRect(0, 0, 1024, 560);
+
+  const rows = 5;
+  const cols = 14;
+  const padX = 26, padY = 26;
+  const gw = (1024 - padX * 2) / cols;
+  const gh = (560 - padY * 2) / rows;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      // widen the outer keys on the bottom row so it reads as a keyboard, not a grid
+      let x = padX + c * gw;
+      let w = gw - 5;
+      if (r === rows - 1) {
+        if (c > 3 && c < 10) { if (c !== 4) continue; x = padX + 4 * gw; w = gw * 6 - 5; }
+      }
+      const y = padY + r * gh;
+      const h = gh - 5;
+      ctx.fillStyle = '#23252b';
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, 6);
+      ctx.fill();
+      // top bevel
+      ctx.fillStyle = 'rgba(255,255,255,0.05)';
+      ctx.beginPath();
+      ctx.roundRect(x + 2, y + 2, w - 4, h * 0.42, 5);
+      ctx.fill();
+    }
+  }
+
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  cache.set(key, tex);
+  return tex;
+}
+
 export function disposeTextureCache() {
   cache.forEach((t) => t.dispose());
   cache.clear();

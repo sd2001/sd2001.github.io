@@ -1,17 +1,14 @@
 import * as THREE from 'three';
 
-export type CamMode = 'intro' | 'monitor' | 'free';
+export type CamMode = 'intro' | 'monitor';
 
 export const FOV = 45;
 
-/** Wide establishing shot, slightly off-axis so the room reads as a space. */
+/**
+ * The establishing shot. The room is small and the camera never moves from here
+ * beyond a little pointer parallax, so this framing is the whole first impression.
+ */
 export const INTRO = {
-  pos: new THREE.Vector3(1.15, 2.18, 6.35),
-  target: new THREE.Vector3(-0.1, 0.95, -0.55),
-};
-
-/** Mid shot — off the machine, laptop legible but the room still visible. Also the free-look anchor. */
-export const APPROACH = {
-  pos: new THREE.Vector3(0.55, 1.42, 2.05),
-  target: new THREE.Vector3(0, 0.78, -0.1),
+  pos: new THREE.Vector3(1.75, 1.92, 3.55),
+  target: new THREE.Vector3(-0.05, 0.86, -1.05),
 };

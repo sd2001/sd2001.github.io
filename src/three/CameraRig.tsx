@@ -2,27 +2,30 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { cameraForScreen, SCREEN_CENTER } from './laptopConfig';
-import { APPROACH, FOV, INTRO, type CamMode } from './cameraPoses';
+import { FOV, INTRO, type CamMode } from './cameraPoses';
 
 export type { CamMode };
 
 const SCREEN_ASPECT = 0.372 / 0.2325;
-
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 type Props = {
   mode: CamMode;
   onArrive?: (mode: CamMode) => void;
   paused?: boolean;
+  /** Pointer parallax on the wide shot. Off on touch, where there is no hover. */
+  parallax?: boolean;
 };
 
 /**
- * All transition state lives in refs and is driven from useFrame rather than from
- * effects. That makes the rig immune to StrictMode double-mounting and to any
- * re-render of the Canvas subtree — a mode change is detected by comparing against
- * the last mode we actually animated to, not by an effect firing.
+ * Two fixed poses and a transition between them. There is no free navigation: the room
+ * is a set, not a space to walk around, so the only camera move is sitting down at the
+ * laptop and standing back up.
+ *
+ * State lives in refs and is driven from useFrame rather than effects, which makes the
+ * rig immune to StrictMode double-mounting and to re-renders of the Canvas subtree.
  */
-export default function CameraRig({ mode, onArrive, paused }: Props) {
+export default function CameraRig({ mode, onArrive, paused, parallax = true }: Props) {
   const { camera, size } = useThree();
 
   const fromPos = useRef(new THREE.Vector3());
@@ -34,46 +37,39 @@ export default function CameraRig({ mode, onArrive, paused }: Props) {
   const t = useRef(1);
   const dur = useRef(1);
   const settled = useRef(true);
-  /** The mode the rig is currently animating to (or resting at). */
   const activeMode = useRef<CamMode | null>(null);
   const mouse = useRef({ x: 0, y: 0 });
   const aspect = useRef(size.width / Math.max(1, size.height));
-
   aspect.current = size.width / Math.max(1, size.height);
 
   useEffect(() => {
+    if (!parallax) return;
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
       mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouse.current.y = (e.clientY / window.innerHeight) * 2 - 1;
     };
     window.addEventListener('pointermove', onMove);
     return () => window.removeEventListener('pointermove', onMove);
-  }, []);
+  }, [parallax]);
 
-  /** Screen framing depends on aspect: on a narrow window, fit to width instead of height. */
+  /** On a narrow or portrait window, fit the screen to width instead of height. */
   const monitorPose = () => {
     const a = aspect.current;
-    const fill = a >= SCREEN_ASPECT ? 0.8 : 0.8 * (a / SCREEN_ASPECT);
-    return { pos: cameraForScreen(FOV, Math.max(0.3, fill)), target: SCREEN_CENTER.clone() };
+    const fill = a >= SCREEN_ASPECT ? 0.84 : 0.84 * (a / SCREEN_ASPECT);
+    return { pos: cameraForScreen(FOV, Math.max(0.28, fill)), target: SCREEN_CENTER.clone() };
   };
 
-  const poseFor = (m: CamMode) => {
-    if (m === 'monitor') return monitorPose();
-    if (m === 'free') return { pos: APPROACH.pos.clone(), target: APPROACH.target.clone() };
-    return { pos: INTRO.pos.clone(), target: INTRO.target.clone() };
-  };
+  const poseFor = (m: CamMode) =>
+    m === 'monitor' ? monitorPose() : { pos: INTRO.pos.clone(), target: INTRO.target.clone() };
 
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.05);
 
-
-    // ---- detect a mode change without relying on effects ----
     if (activeMode.current !== mode) {
       const first = activeMode.current === null;
       const pose = poseFor(mode);
-
       if (first) {
-        // Cold start: snap straight to the opening pose.
         camera.position.copy(pose.pos);
         lookAt.current.copy(pose.target);
         camera.lookAt(lookAt.current);
@@ -84,27 +80,23 @@ export default function CameraRig({ mode, onArrive, paused }: Props) {
         activeMode.current = mode;
         onArrive?.(mode);
         return;
-      } else {
-        fromPos.current.copy(camera.position);
-        fromTarget.current.copy(lookAt.current);
-        toPos.current.copy(pose.pos);
-        toTarget.current.copy(pose.target);
-        t.current = 0;
-        settled.current = false;
-        // Flying into the screen is the money shot — give it room to breathe.
-        dur.current = mode === 'monitor' ? 2.15 : mode === 'intro' ? 1.9 : 1.35;
       }
+      fromPos.current.copy(camera.position);
+      fromTarget.current.copy(lookAt.current);
+      toPos.current.copy(pose.pos);
+      toTarget.current.copy(pose.target);
+      t.current = 0;
+      settled.current = false;
+      dur.current = mode === 'monitor' ? 1.9 : 1.5;
       activeMode.current = mode;
     }
 
-    // ---- run the transition ----
     if (!settled.current) {
       t.current = Math.min(1, t.current + dt / dur.current);
       const e = easeInOutCubic(t.current);
       camera.position.lerpVectors(fromPos.current, toPos.current, e);
       lookAt.current.lerpVectors(fromTarget.current, toTarget.current, e);
       camera.lookAt(lookAt.current);
-
       if (t.current >= 1) {
         settled.current = true;
         onArrive?.(mode);
@@ -112,10 +104,8 @@ export default function CameraRig({ mode, onArrive, paused }: Props) {
       return;
     }
 
-    // ---- settled behaviour ----
     if (mode === 'monitor') {
-      // Hold dead still: any drift here fights with clicking things on screen.
-      // Re-frame only if the window has been resized out from under us.
+      // Hold dead still: drift here would fight with clicking things on screen.
       const want = monitorPose();
       if (camera.position.distanceToSquared(want.pos) > 1e-6) {
         camera.position.copy(want.pos);
@@ -125,29 +115,26 @@ export default function CameraRig({ mode, onArrive, paused }: Props) {
       return;
     }
 
-    if (paused || mode === 'free') return;
+    if (paused) return;
 
-    // Slow arc plus a little pointer parallax, so the establishing shot stays alive.
-    const time = performance.now() / 1000;
-    const orbit = Math.sin(time * 0.12) * 0.55;
-    const bob = Math.sin(time * 0.19) * 0.09;
-
-    const desired = new THREE.Vector3(
-      INTRO.pos.x + orbit + mouse.current.x * 0.42,
-      INTRO.pos.y + bob - mouse.current.y * 0.22,
-      INTRO.pos.z - Math.abs(orbit) * 0.25,
-    );
-    camera.position.lerp(desired, 1 - Math.pow(0.001, dt));
-
-    lookAt.current.lerp(
-      new THREE.Vector3(
-        INTRO.target.x + mouse.current.x * 0.12,
-        INTRO.target.y - mouse.current.y * 0.06,
-        INTRO.target.z,
-      ),
-      1 - Math.pow(0.002, dt),
-    );
-    camera.lookAt(lookAt.current);
+    // A little pointer parallax so the fixed shot is not completely dead.
+    if (parallax) {
+      const desired = new THREE.Vector3(
+        INTRO.pos.x + mouse.current.x * 0.3,
+        INTRO.pos.y - mouse.current.y * 0.16,
+        INTRO.pos.z,
+      );
+      camera.position.lerp(desired, 1 - Math.pow(0.004, dt));
+      lookAt.current.lerp(
+        new THREE.Vector3(
+          INTRO.target.x + mouse.current.x * 0.08,
+          INTRO.target.y - mouse.current.y * 0.04,
+          INTRO.target.z,
+        ),
+        1 - Math.pow(0.006, dt),
+      );
+      camera.lookAt(lookAt.current);
+    }
   });
 
   return null;

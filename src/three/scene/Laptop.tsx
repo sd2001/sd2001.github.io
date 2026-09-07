@@ -4,6 +4,7 @@ import { Html, RoundedBox } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import type { Theme } from '../theme';
 import { HTML_SCALE, LAPTOP, SCREEN_PX } from '../laptopConfig';
+import { keyboardFace } from '../textures';
 import Desktop from '../../os/Desktop';
 
 type Props = {
@@ -11,12 +12,19 @@ type Props = {
   /** true once the camera has arrived at the screen — enables DOM interaction. */
   active: boolean;
   onRequestZoom: () => void;
+  /**
+   * When false the screen is painted rather than mounted as live DOM. Phones show the
+   * room as a hero image and get the portfolio as a real page, so mounting a 1280x800
+   * desktop into CSS3D there is pure cost for something a few pixels tall.
+   */
+  liveScreen?: boolean;
 };
 
-export default function Laptop({ theme, active, onRequestZoom }: Props) {
+export default function Laptop({ theme, active, onRequestZoom, liveScreen = true }: Props) {
   const lidRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
+  const keys = keyboardFace();
 
   // Gentle flicker on the screen-glow so the room does not feel frozen.
   useFrame(({ clock }) => {
@@ -35,23 +43,12 @@ export default function Laptop({ theme, active, onRequestZoom }: Props) {
         <RoundedBox args={[base.w, base.h, base.d]} radius={0.005} smoothness={3} castShadow receiveShadow>
           <meshStandardMaterial color="#2c2f34" roughness={0.36} metalness={0.85} />
         </RoundedBox>
-        {/* keyboard well */}
-        <mesh position={[0, base.h / 2 + 0.0008, -0.028]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[base.w * 0.86, base.d * 0.55]} />
-          <meshStandardMaterial color="#141518" roughness={0.85} />
+        {/* Keyboard as a single textured plane. This used to be 70 box meshes for
+            something a few pixels tall on screen. */}
+        <mesh position={[0, base.h / 2 + 0.0009, -0.028]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[base.w * 0.87, base.d * 0.56]} />
+          <meshStandardMaterial map={keys} roughness={0.78} />
         </mesh>
-        {/* key rows — one instanced grid, cheap and reads well at this scale */}
-        {Array.from({ length: 5 }, (_, r) =>
-          Array.from({ length: 14 }, (_, k) => (
-            <mesh
-              key={`${r}-${k}`}
-              position={[-0.163 + k * 0.0251, base.h / 2 + 0.0016, -0.088 + r * 0.0245]}
-            >
-              <boxGeometry args={[0.0205, 0.0016, 0.0198]} />
-              <meshStandardMaterial color="#1e2025" roughness={0.7} />
-            </mesh>
-          )),
-        )}
         {/* trackpad */}
         <mesh position={[0, base.h / 2 + 0.0009, 0.072]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.115, 0.075]} />
@@ -103,16 +100,26 @@ export default function Laptop({ theme, active, onRequestZoom }: Props) {
           <meshBasicMaterial color={theme.name === 'arsenal' ? '#ff5a52' : '#6f8dff'} transparent opacity={0.14} toneMapped={false} />
         </mesh>
 
-        {/* the screen glow spills onto the machine and the floor */}
-        <rectAreaLight
-          width={screen.w}
-          height={screen.h}
-          intensity={3.2}
+        {/* Screen spill. A rectAreaLight was truer but needs RectAreaLightUniformsLib
+            and costs several times a point light for a glow this small. */}
+        <pointLight
+          position={[0, LAPTOP.screenLocal.y, 0.09]}
           color={theme.name === 'arsenal' ? '#ffd7d4' : '#cfe0ff'}
-          position={[0, LAPTOP.screenLocal.y, 0.02]}
+          intensity={0.5}
+          distance={1.5}
+          decay={2}
         />
 
-        {/* ---------------- LIVE DOM SCREEN ---------------- */}
+        {/* ---------------- SCREEN ---------------- */}
+        {!liveScreen && (
+          // Painted stand-in: a lit panel in the club colours, no DOM, no CSS3D.
+          <mesh position={[LAPTOP.screenLocal.x, LAPTOP.screenLocal.y, LAPTOP.screenLocal.z]}>
+            <planeGeometry args={[screen.w, screen.h]} />
+            <meshBasicMaterial color="#b4232a" toneMapped={false} />
+          </mesh>
+        )}
+
+        {liveScreen && (
         <Html
           transform
           scale={HTML_SCALE}
@@ -135,6 +142,7 @@ export default function Laptop({ theme, active, onRequestZoom }: Props) {
             <Desktop theme={theme} active={active} />
           </div>
         </Html>
+        )}
 
         {/* screen reflection sheen — a faint diagonal gradient sitting over the DOM */}
         <mesh position={[0, LAPTOP.screenLocal.y, 0.004]} renderOrder={2}>

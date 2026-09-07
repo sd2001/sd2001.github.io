@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { profile, socials } from '../data/content';
-import type { ThemeName } from '../three/theme';
-import { THEMES } from '../three/theme';
+import { THEMES, type ThemeName } from '../three/theme';
 import type { CamMode } from '../three/cameraPoses';
 
 const ICON: Record<string, string> = {
@@ -15,12 +14,10 @@ type Props = {
   onTheme: (t: ThemeName) => void;
   onEnter: () => void;
   onBack: () => void;
-  onFree: () => void;
-  /** Opens the Credits window on the laptop, flying the camera in if needed. */
   onCredits: () => void;
 };
 
-export default function Hud({ mode, arrived, themeName, onTheme, onEnter, onBack, onFree, onCredits }: Props) {
+export default function Hud({ mode, arrived, themeName, onTheme, onEnter, onBack, onCredits }: Props) {
   const [clock, setClock] = useState('');
 
   useEffect(() => {
@@ -34,14 +31,12 @@ export default function Hud({ mode, arrived, themeName, onTheme, onEnter, onBack
 
   return (
     <div className="hud">
-      {/* ---- identity, top-left ---- */}
       <div className="hud-tl">
         <div className="hud-box">{profile.name}</div>
         <div className="hud-box dim">{profile.role} · {profile.company}</div>
         <div className="hud-box time"><span className="sq" />{clock}</div>
       </div>
 
-      {/* ---- controls, top-right ---- */}
       <div className="hud-tr">
         <div className="hud-switch" title="Gym look">
           {(Object.keys(THEMES) as ThemeName[]).map((t) => (
@@ -50,31 +45,24 @@ export default function Hud({ mode, arrived, themeName, onTheme, onEnter, onBack
             </button>
           ))}
         </div>
-        {mode !== 'free' && (
-          <button className="hud-btn" onClick={onFree}>◎ Look around</button>
-        )}
-        {mode !== 'intro' && (
-          <button className="hud-btn" onClick={onBack}>⤺ Wide shot</button>
-        )}
       </div>
 
-      {/* ---- prompt / actions, bottom-centre ---- */}
       <div className="hud-bottom">
         {!inMonitor && arrived && (
-          <div className="hud-prompt">Click the laptop on the chest press to sit down</div>
+          <div className="hud-prompt">Click the laptop on the desk to sit down</div>
         )}
         {inMonitor && arrived && (
           <div className="hud-prompt" style={{ animation: 'none', opacity: 0.75 }}>
-            You are at the machine — the screen is live. Press <b>Esc</b> to step back.
+            The screen is live — click around it. Press <b>Esc</b> to step back.
           </div>
         )}
         <div className="hud-actions">
-          {!inMonitor && <button className="hud-btn on" onClick={onEnter}>▶ Sit down at the laptop</button>}
-          {inMonitor && <button className="hud-btn" onClick={onBack}>⤺ Stand up</button>}
+          {!inMonitor
+            ? <button className="hud-btn on" onClick={onEnter}>▶ Sit down at the laptop</button>
+            : <button className="hud-btn" onClick={onBack}>⤺ Stand up</button>}
         </div>
       </div>
 
-      {/* ---- socials, bottom-left ---- */}
       <div className="hud-bl">
         <div className="hud-social">
           {socials.map((s) => (
@@ -83,12 +71,9 @@ export default function Hud({ mode, arrived, themeName, onTheme, onEnter, onBack
             </a>
           ))}
         </div>
-        <div className="hud-hint">
-          {mode === 'free' ? 'drag to orbit · scroll to zoom' : 'drag your cursor to look around'}
-        </div>
       </div>
 
-      {/* ---- attribution, bottom-right — the concept is Henry Heffernan's ---- */}
+      {/* attribution — the concept is Henry Heffernan's */}
       <div className="hud-credit">
         <span className="hud-credit-line">
           Concept inspired by{' '}

@@ -1,13 +1,16 @@
-# Swap these when you have newer photos
+# Images used by the site
 
-| File            | Used for                          | Wants                                  |
-|-----------------|-----------------------------------|----------------------------------------|
-| `portrait.jpg`  | About window header (planned)     | Square-ish headshot, 800×800 or larger |
-| `self.jpg`      | Spare                             | —                                      |
-| `munnar-1.jpg`  | Spare                             | —                                      |
-| `munnar-2.jpg`  | Spare                             | —                                      |
+| File                    | Used for                                  |
+|-------------------------|-------------------------------------------|
+| `arsenal-champions.jpg` | The framed photo on the gym's back wall   |
+| `arsenal-wallpaper.jpg` | The laptop desktop wallpaper              |
 
-These came out of the old (V1) site. Drop replacements in with the same filenames
-and nothing else needs to change.
+Both are Arsenal FC / press photography, supplied by the site owner. Swap either file to
+change what appears in the room; the filenames are what the code looks for.
 
-Still wanted: a gym photo, a guitar photo, and a photo of the dog.
+The old placeholder headshots that used to live here (`portrait.jpg`, `self.jpg`, the Munnar
+shots) were removed before the first deploy: nothing referenced them, and publishing them
+would have put 4.5MB of unused personal photos on the public web. They are still in git
+history if wanted.
+
+When new photos arrive, drop them in here and wire them up explicitly.

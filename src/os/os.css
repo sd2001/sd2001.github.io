@@ -60,44 +60,24 @@
 .os-boot-logo { font-size: 13px; color: #2f3d55; white-space: pre; margin-bottom: 18px; }
 
 /* --------------------------------------------------------------------------
-   WALLPAPER — Arsenal title season, drawn entirely in CSS
+   WALLPAPER — the Emirates tifo, "The Streets Are Our Own"
    -------------------------------------------------------------------------- */
 .os-wall { position: absolute; inset: 0; overflow: hidden; }
-.os-wall-base {
+.os-wall-photo {
   position: absolute; inset: 0;
-  background:
-    radial-gradient(120% 90% at 50% -10%, #ff2d20 0%, #c2070d 34%, #7c0409 62%, #2b0508 100%);
+  background-image: url('/img/arsenal-wallpaper.jpg');
+  background-size: cover;
+  background-position: center 42%;
+  background-repeat: no-repeat;
 }
-.os-wall-chevrons {
-  position: absolute; inset: -20%;
-  background: repeating-linear-gradient(
-    108deg,
-    rgba(255,255,255,0.055) 0px,
-    rgba(255,255,255,0.055) 46px,
-    transparent 46px,
-    transparent 132px
-  );
-}
-.os-wall-glow {
+.os-wall-scrim {
   position: absolute; inset: 0;
-  background:
-    radial-gradient(45% 38% at 18% 12%, rgba(255,255,255,0.22), transparent 70%),
-    radial-gradient(40% 34% at 84% 8%, rgba(255,255,255,0.16), transparent 70%);
+  background: linear-gradient(180deg, rgba(6,7,11,0.42) 0%, rgba(6,7,11,0.14) 38%, rgba(6,7,11,0.5) 100%);
 }
 .os-wall-vig {
   position: absolute; inset: 0;
-  background: radial-gradient(105% 85% at 50% 42%, transparent 38%, rgba(0,0,0,0.62) 100%);
+  background: radial-gradient(115% 95% at 50% 45%, transparent 42%, rgba(0,0,0,0.5) 100%);
 }
-.os-wall-mark {
-  position: absolute; right: 44px; bottom: 96px; text-align: right;
-  color: rgba(255,255,255,0.94); text-shadow: 0 4px 30px rgba(0,0,0,0.45);
-  pointer-events: none;
-}
-.os-wall-mark .k { font-family: var(--mono); font-size: 13px; letter-spacing: 0.42em; opacity: 0.78; }
-.os-wall-mark .big { font-size: 62px; font-weight: 800; letter-spacing: -0.025em; line-height: 0.98; margin-top: 6px; }
-.os-wall-mark .yr { font-size: 30px; font-weight: 700; opacity: 0.9; letter-spacing: 0.04em; }
-.os-wall-mark .rule { height: 2px; background: rgba(255,255,255,0.5); margin: 12px 0 8px auto; width: 220px; }
-.os-wall-mark .sub { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; opacity: 0.7; }
 
 /* --------------------------------------------------------------------------
    MENU BAR

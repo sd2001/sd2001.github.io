@@ -120,8 +120,8 @@ export default function CameraRig({ mode, onArrive, paused, parallax = true }: P
     // A little pointer parallax so the fixed shot is not completely dead.
     if (parallax) {
       const desired = new THREE.Vector3(
-        INTRO.pos.x + mouse.current.x * 0.3,
-        INTRO.pos.y - mouse.current.y * 0.16,
+        INTRO.pos.x + mouse.current.x * 0.2,
+        INTRO.pos.y - mouse.current.y * 0.11,
         INTRO.pos.z,
       );
       camera.position.lerp(desired, 1 - Math.pow(0.004, dt));

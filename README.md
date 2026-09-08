@@ -82,6 +82,7 @@ src/
 │       ├── Props.tsx      Guitar, dog, neon
 │       ├── Laptop.tsx     The laptop, and the live DOM screen
 │       └── Gym.tsx        Layout — where everything stands
+├── audio/guitar.ts        Synthesised guitar strum (WebAudio, no files, no licensing)
 ├── os/                    The desktop that runs on the laptop screen
 │   ├── Desktop.tsx        Boot sequence, wallpaper, menu bar, icons, dock
 │   ├── Window.tsx         Window chrome and dragging
@@ -92,6 +93,7 @@ src/
     ├── useDevice.ts       phone / tablet / desktop tiering
     ├── MobileShell.tsx    The phone layout (shares the app components)
     ├── SceneBoundary.tsx  Keeps a WebGL failure from blanking the page
+    ├── NowPlaying.tsx     The track card shown when the guitar is clicked
     ├── StartScreen.tsx
     └── Hud.tsx
 ```
@@ -139,6 +141,23 @@ is derived from the same constants, so moving the laptop moves the camera with i
 
 ---
 
+## The guitar
+
+Clicking the guitar in the room advances through `songs` in `src/data/content.ts` and shows
+a card on the left. Two deliberate choices:
+
+- **The strum is synthesised**, not a recording — Karplus-Strong plucked strings through a
+  soft-clip overdrive, generated in the browser (`src/audio/guitar.ts`). No audio files, no
+  licensing, and it works offline. It is a guitar chord, not a reproduction of any track.
+- **The real recording is linked, not hosted.** Each song gets a "Listen to the real thing"
+  link — a direct `url` if one is set, otherwise a Spotify search. Hosting the actual audio
+  would be a copyright problem.
+
+Sound is on by default but nothing can make a noise until the visitor clicks the guitar, so
+it is never autoplay. There is a toggle in the top-right regardless.
+
+To add tracks, append to `songs` — `{ title, artist, album?, year?, url? }`.
+
 ## Editing content
 
 Almost everything is in **`src/data/content.ts`** — experience, projects, skills, links,
@@ -155,8 +174,9 @@ phone-number-redacted copy of the source resume.
 - The site's look is **late-night warehouse**. A full Arsenal-red palette is still defined in
   `theme.ts` and is one line away (`DEFAULT_THEME`) if it is ever wanted, but it is not exposed
   in the UI.
-- Arsenal FC is referenced as a supporter, without affiliation. No club crest, cannon or
-  other registered mark appears anywhere — the banner and wallpaper use colour and type only.
+- Arsenal FC imagery (`public/img/arsenal-champions.jpg` on the wall, `arsenal-wallpaper.jpg` as
+  the desktop) is club/press photography, supplied by the site owner and used as a supporter with
+  no affiliation to or endorsement from the club. Swap or remove those two files to change it.
 - Phones and portrait tablets get a dedicated layout: the 3D room as a hero band, then the
   same content as a normal scrolling page. The breakpoint is ~820px, chosen because below it
   a 1280x800 screen rendered inside the scene cannot be legible at any camera distance.

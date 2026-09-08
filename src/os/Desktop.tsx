@@ -68,17 +68,11 @@ function Boot({ onDone }: { onDone: () => void }) {
 function Wallpaper() {
   return (
     <div className="os-wall">
-      <div className="os-wall-base" />
-      <div className="os-wall-chevrons" />
-      <div className="os-wall-glow" />
+      <div className="os-wall-photo" />
+      {/* Scrim: the photo is busy and bright in places, and window text has to stay
+          readable over it. Kept light so the tifo still reads. */}
+      <div className="os-wall-scrim" />
       <div className="os-wall-vig" />
-      <div className="os-wall-mark">
-        <div className="k">NORTH LONDON</div>
-        <div className="big">CHAMPIONS</div>
-        <div className="yr">2025 / 26</div>
-        <div className="rule" />
-        <div className="sub">THE LONG WAIT IS OVER</div>
-      </div>
     </div>
   );
 }

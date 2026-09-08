@@ -12,9 +12,11 @@ type Props = {
   onEnter: () => void;
   onBack: () => void;
   onCredits: () => void;
+  sound: boolean;
+  onToggleSound: () => void;
 };
 
-export default function Hud({ mode, arrived, onEnter, onBack, onCredits }: Props) {
+export default function Hud({ mode, arrived, onEnter, onBack, onCredits, sound, onToggleSound }: Props) {
   const [clock, setClock] = useState('');
 
   useEffect(() => {
@@ -34,9 +36,21 @@ export default function Hud({ mode, arrived, onEnter, onBack, onCredits }: Props
         <div className="hud-box time"><span className="sq" />{clock}</div>
       </div>
 
+      <div className="hud-tr">
+        <button
+          className={`hud-btn${sound ? ' on' : ''}`}
+          onClick={onToggleSound}
+          title={sound ? 'Sound on — click the guitar to strum it' : 'Sound off'}
+        >
+          {sound ? '🔊 Sound on' : '🔇 Sound off'}
+        </button>
+      </div>
+
       <div className="hud-bottom">
         {!inMonitor && arrived && (
-          <div className="hud-prompt">Click the laptop on the desk to sit down</div>
+          <div className="hud-prompt">
+            Click the laptop to sit down &nbsp;·&nbsp; click the guitar to play it
+          </div>
         )}
         {inMonitor && arrived && (
           <div className="hud-prompt" style={{ animation: 'none', opacity: 0.75 }}>

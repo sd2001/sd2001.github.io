@@ -16,13 +16,17 @@ type Props = {
   liveScreen: boolean;
   /** True once the camera has been sent to the screen. */
   atScreen: boolean;
+  /** Clicking the guitar picks the next track. */
+  onStrum: () => void;
 };
 
 /**
  * A small room, laid out for one fixed camera. Everything is placed to read from the
  * establishing shot; nothing is here "for when you walk over there", because you cannot.
  */
-export default function Gym({ theme, laptopActive, onRequestZoom, shadows, liveScreen, atScreen }: Props) {
+export default function Gym({
+  theme, laptopActive, onRequestZoom, shadows, liveScreen, atScreen, onStrum,
+}: Props) {
   return (
     <group>
       <Room theme={theme} shadows={shadows} />
@@ -53,8 +57,10 @@ export default function Gym({ theme, laptopActive, onRequestZoom, shadows, liveS
       </group>
 
       {/* ---- personal corners ---- */}
-      <group position={[-2.2, 0, -0.25]} rotation={[0, 0.58, 0]}>
-        <Guitar theme={theme} />
+      {/* Turned to face the camera (the shot is fixed, so this is a known angle) and
+          scaled up a little — it is meant to be recognisable, and clickable. */}
+      <group position={[-2.15, 0, -0.1]} rotation={[0, 0.758, 0]} scale={1.12}>
+        <Guitar theme={theme} onStrum={onStrum} />
       </group>
       <group position={[2.05, 0, 0.05]} rotation={[0, -0.7, 0]}>
         <Dog theme={theme} />

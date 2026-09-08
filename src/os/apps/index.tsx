@@ -374,8 +374,9 @@ export function Arsenal() {
         <div style={{ fontSize: 22, fontWeight: 700, opacity: 0.85 }}>2025 / 26</div>
       </div>
       <p className="muted" style={{ fontSize: 12.5 }}>
-        The wallpaper behind this window and the banner on the gym wall are both doing a small victory lap. They
-        have earned it.
+        The wallpaper behind this window is the Emirates tifo — <em>the streets are our own</em> — and
+        the photo framed on the gym wall is the title being lifted. Both are doing a small victory
+        lap. They have earned it.
       </p>
       <p className="faint" style={{ fontSize: 11.5 }}>
         Unofficial and unaffiliated — a supporter&rsquo;s page, no club marks used.

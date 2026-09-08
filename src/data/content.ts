@@ -410,3 +410,26 @@ export const life = {
 };
 
 export const nowPlaying = ['Linkin Park', 'Nickelback', 'Bad Omens', 'Bring Me The Horizon', 'Foo Fighters'];
+
+/**
+ * Tracks the guitar in the room cycles through when you click it.
+ * More to come — Swarnabha is sending the full list.
+ */
+export type Song = {
+  title: string;
+  artist: string;
+  album?: string;
+  year?: string;
+  /** Optional direct link. Without one the card falls back to a search URL. */
+  url?: string;
+};
+
+/** Where to actually listen. We cannot host the recording, so we point at it. */
+export function listenUrl(song: Song) {
+  if (song.url) return song.url;
+  return `https://open.spotify.com/search/${encodeURIComponent(`${song.title} ${song.artist}`)}`;
+}
+
+export const songs: Song[] = [
+  { title: 'Bleed It Out', artist: 'Linkin Park', album: 'Minutes to Midnight', year: '2007' },
+];

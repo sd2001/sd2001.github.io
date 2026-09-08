@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { Theme } from '../theme';
-import { concrete, rubberTiles, titleBanner } from '../textures';
+import { useTexture } from '@react-three/drei';
+import { concrete, rubberTiles } from '../textures';
 
 /** Deliberately small. A big room meant a lot of geometry for space nobody looks at. */
 export const ROOM = { w: 8.4, d: 6.6, h: 3.15 };
@@ -44,7 +45,10 @@ function Lamp({ theme, position, lit = true }: { theme: Theme; position: [number
 export default function Room({ theme, shadows }: { theme: Theme; shadows: boolean }) {
   const floorTex = useMemo(() => rubberTiles(theme, 9), [theme]);
   const wallTex = useMemo(() => concrete(theme, 3), [theme]);
-  const banner = useMemo(() => titleBanner(theme), [theme]);
+  // The framed photo on the back wall. 736x414, so the frame is 16:9.
+  const banner = useTexture('/img/arsenal-champions.jpg');
+  banner.colorSpace = THREE.SRGBColorSpace;
+  banner.anisotropy = 8;
 
   const hw = ROOM.w / 2;
   const hd = ROOM.d / 2;
@@ -87,21 +91,23 @@ export default function Room({ theme, shadows }: { theme: Theme; shadows: boolea
         <meshStandardMaterial color={theme.wallStripe} roughness={0.92} />
       </mesh>
 
-      {/* Arsenal banner */}
-      <group position={[-2.15, 2.05, -hd + 0.06]}>
+      {/* Framed Arsenal photo on the back wall. A modest emissive lift keeps it legible
+          in a dark room without turning the frame into a light source. */}
+      <group position={[-2.1, 2.02, -hd + 0.06]}>
         <mesh>
-          <planeGeometry args={[2.2, 1.24]} />
+          <planeGeometry args={[2.4, 1.35]} />
           <meshStandardMaterial
             map={banner}
             emissiveMap={banner}
             emissive="#ffffff"
-            emissiveIntensity={isDark ? 0.45 : 0.16}
-            roughness={0.72}
+            emissiveIntensity={isDark ? 0.32 : 0.12}
+            roughness={0.66}
           />
         </mesh>
+        {/* frame */}
         <mesh position={[0, 0, -0.02]}>
-          <planeGeometry args={[2.32, 1.36]} />
-          <meshStandardMaterial color={theme.metalDark} roughness={0.5} metalness={0.55} />
+          <planeGeometry args={[2.52, 1.47]} />
+          <meshStandardMaterial color={theme.metalDark} roughness={0.45} metalness={0.6} />
         </mesh>
       </group>
 

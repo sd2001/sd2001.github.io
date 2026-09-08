@@ -29,6 +29,8 @@ type Props = {
   tier: DeviceTier;
   /** Phones render the scene as a decorative hero; the OS lives outside the canvas. */
   hero?: boolean;
+  /** Clicking the guitar in the room picks the next track. */
+  onStrum: () => void;
 };
 
 /** Quality budget per device. Phones get no shadows and no post-processing. */
@@ -39,7 +41,7 @@ const QUALITY = {
 };
 
 export default function Experience({
-  themeName, mode, onArrive, onRequestZoom, laptopActive, paused, tier, hero,
+  themeName, mode, onArrive, onRequestZoom, laptopActive, paused, tier, hero, onStrum,
 }: Props) {
   const theme = THEMES[themeName];
   const q = QUALITY[tier];
@@ -92,6 +94,7 @@ export default function Experience({
           shadows={q.shadows}
           liveScreen={!hero}
           atScreen={mode === 'monitor'}
+          onStrum={onStrum}
         />
         <Preload all />
       </Suspense>

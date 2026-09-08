@@ -18,15 +18,17 @@ export const DESK = {
 
 export const LAPTOP = {
   /** World position of the lid hinge — the back edge of the base, resting on the desk. */
-  position: new THREE.Vector3(0, DESK.top, DESK.z - 0.17),
+  position: new THREE.Vector3(0, DESK.top, DESK.z - 0.2),
   /** Lid tilt about X. Negative leans the top of the screen away from the viewer. */
   tilt: THREE.MathUtils.degToRad(-15),
-  base: { w: 0.41, h: 0.016, d: 0.27 },
-  lid: { w: 0.41, h: 0.262, d: 0.012 },
+  // Scaled up ~28% from a 16-inch laptop: it is the focal point of the whole scene and
+  // was reading small against the desk. Still comfortably inside the 1.7 x 0.72m desktop.
+  base: { w: 0.525, h: 0.0205, d: 0.346 },
+  lid: { w: 0.525, h: 0.335, d: 0.0154 },
   /** Viewable screen area, 16:10 to match SCREEN_PX. */
-  screen: { w: 0.372, h: 0.2325 },
+  screen: { w: 0.476, h: 0.2976 },
   /** Screen centre in lid-local space. */
-  screenLocal: new THREE.Vector3(0, 0.131, 0.0025),
+  screenLocal: new THREE.Vector3(0, 0.1675, 0.0032),
 };
 
 /**

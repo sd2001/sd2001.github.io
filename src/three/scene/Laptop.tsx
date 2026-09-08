@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import * as THREE from 'three';
-import { Html, RoundedBox } from '@react-three/drei';
+import { Html, RoundedBox, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import type { Theme } from '../theme';
 import { HTML_SCALE, LAPTOP, SCREEN_PX } from '../laptopConfig';
@@ -61,15 +61,15 @@ function ClickHint({ theme, hidden, onClick }: { theme: Theme; hidden: boolean; 
       halo.current.scale.setScalar(hs);
     }
 
-    // 0.253 is where the tilted lid tops out; sit clear of it
-    g.position.y = 0.345 + Math.sin(t * 2.1) * 0.03;
+    // 0.324 is where the tilted lid tops out; sit clear of it
+    g.position.y = 0.425 + Math.sin(t * 2.1) * 0.032;
     g.rotation.y = t * 0.7;
   });
 
   return (
     <group
       ref={group}
-      position={[0, 0.345, -0.02]}
+      position={[0, 0.425, -0.02]}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
       onClick={(e) => { e.stopPropagation(); onClick(); }}
@@ -107,6 +107,8 @@ export default function Laptop({
   const glowRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const keys = keyboardFace();
+  // Phones paint the screen instead of mounting the desktop; show the real wallpaper.
+  const wallpaper = useTexture('/img/arsenal-wallpaper.jpg');
 
   // Gentle flicker on the screen-glow so the room does not feel frozen.
   useFrame(({ clock }) => {
@@ -123,22 +125,22 @@ export default function Laptop({
       {/* ---------------- BASE ---------------- */}
       <group position={[0, base.h / 2, base.d / 2]}>
         <RoundedBox args={[base.w, base.h, base.d]} radius={0.005} smoothness={3} castShadow receiveShadow>
-          <meshStandardMaterial color="#2c2f34" roughness={0.36} metalness={0.85} />
+          <meshStandardMaterial color="#24272c" roughness={0.44} metalness={0.75} />
         </RoundedBox>
         {/* Keyboard as a single textured plane. This used to be 70 box meshes for
             something a few pixels tall on screen. */}
         <mesh position={[0, base.h / 2 + 0.0009, -0.028]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[base.w * 0.87, base.d * 0.56]} />
-          <meshStandardMaterial map={keys} roughness={0.78} />
+          <meshStandardMaterial map={keys} roughness={0.82} metalness={0.05} />
         </mesh>
         {/* trackpad */}
-        <mesh position={[0, base.h / 2 + 0.0009, 0.072]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[0.115, 0.075]} />
-          <meshStandardMaterial color="#25282d" roughness={0.32} metalness={0.5} />
+        <mesh position={[0, base.h / 2 + 0.0009, 0.092]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[0.147, 0.096]} />
+          <meshStandardMaterial color="#1b1e23" roughness={0.55} metalness={0.2} />
         </mesh>
         {/* front lip notch */}
         <mesh position={[0, 0, base.d / 2 - 0.001]}>
-          <boxGeometry args={[0.05, base.h * 0.7, 0.004]} />
+          <boxGeometry args={[0.064, base.h * 0.7, 0.005]} />
           <meshStandardMaterial color="#1a1c20" roughness={0.6} metalness={0.7} />
         </mesh>
       </group>
@@ -146,8 +148,8 @@ export default function Laptop({
       {/* ---------------- LID ---------------- */}
       <group rotation={[LAPTOP.tilt, 0, 0]}>
         {/* hinge barrel */}
-        <mesh position={[0, 0.012, -0.004]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.009, 0.009, base.w * 0.55, 12]} />
+        <mesh position={[0, 0.015, -0.005]} rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.011, 0.011, base.w * 0.55, 12]} />
           <meshStandardMaterial color="#1e2126" roughness={0.45} metalness={0.85} />
         </mesh>
 
@@ -185,19 +187,19 @@ export default function Laptop({
         {/* Screen spill. A rectAreaLight was truer but needs RectAreaLightUniformsLib
             and costs several times a point light for a glow this small. */}
         <pointLight
-          position={[0, LAPTOP.screenLocal.y, 0.09]}
+          position={[0, LAPTOP.screenLocal.y * 0.6, 0.16]}
           color={theme.name === 'arsenal' ? '#ffd7d4' : '#cfe0ff'}
-          intensity={0.5}
-          distance={1.5}
+          intensity={0.09}
+          distance={0.8}
           decay={2}
         />
 
         {/* ---------------- SCREEN ---------------- */}
         {!liveScreen && (
-          // Painted stand-in: a lit panel in the club colours, no DOM, no CSS3D.
+          // Painted stand-in: the wallpaper as a texture, no DOM and no CSS3D.
           <mesh position={[LAPTOP.screenLocal.x, LAPTOP.screenLocal.y, LAPTOP.screenLocal.z]}>
             <planeGeometry args={[screen.w, screen.h]} />
-            <meshBasicMaterial color="#b4232a" toneMapped={false} />
+            <meshBasicMaterial map={wallpaper} toneMapped={false} />
           </mesh>
         )}
 
@@ -241,7 +243,7 @@ export default function Laptop({
 
         {/* webcam dot + chin logo */}
         <mesh position={[0, lid.h - 0.008, 0.0022]}>
-          <circleGeometry args={[0.0016, 12]} />
+          <circleGeometry args={[0.002, 12]} />
           <meshStandardMaterial color="#05060a" roughness={0.2} />
         </mesh>
 

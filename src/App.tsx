@@ -4,6 +4,9 @@ import Hud from './ui/Hud';
 import StartScreen from './ui/StartScreen';
 import MobileShell from './ui/MobileShell';
 import SceneBoundary from './ui/SceneBoundary';
+import NowPlaying from './ui/NowPlaying';
+import { songs } from './data/content';
+import { stopGuitarAudio, strumGuitar } from './audio/guitar';
 import { useDevice } from './ui/useDevice';
 import type { CamMode } from './three/cameraPoses';
 import { DEFAULT_THEME } from './three/theme';
@@ -61,6 +64,31 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, [mode, go]);
 
+  /**
+   * Clicking the guitar advances through the track list and shows the card. playId is
+   * bumped every click so re-clicking the same track replays the animation.
+   */
+  const [track, setTrack] = useState(-1);
+  const [playId, setPlayId] = useState(0);
+  /**
+   * Sound is on by default but nothing can make a noise until the visitor clicks the
+   * guitar, so this never ambushes anyone — it is not autoplay.
+   */
+  const [sound, setSound] = useState(true);
+
+  const strum = useCallback(() => {
+    setTrack((i) => (i + 1) % songs.length);
+    setPlayId((n) => n + 1);
+    if (sound) strumGuitar(0.5);
+  }, [sound]);
+
+  const toggleSound = useCallback(() => {
+    setSound((on) => {
+      if (on) stopGuitarAudio();
+      return !on;
+    });
+  }, []);
+
   const laptopActive = mode === 'monitor' && arrived;
 
   return (
@@ -83,11 +111,14 @@ export default function App() {
               paused={!started && !device.isPhone}
               tier={device.tier}
               hero={device.isPhone}
+              onStrum={strum}
             />
           </SceneBoundary>
         )}
         {device.isPhone && <div className="stage-fade" />}
       </div>
+
+      <NowPlaying song={track >= 0 ? songs[track] : null} playId={playId} />
 
       {device.isPhone ? (
         <MobileShell />
@@ -99,6 +130,8 @@ export default function App() {
               arrived={arrived}
               onEnter={() => go('monitor')}
               onBack={() => go('intro')}
+              sound={sound}
+              onToggleSound={toggleSound}
               onCredits={() => {
                 if (mode !== 'monitor') go('monitor');
                 osBus.openApp('credits');

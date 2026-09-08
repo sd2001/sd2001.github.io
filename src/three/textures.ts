@@ -114,61 +114,6 @@ export function knurl(repeat = 1) {
   return tex;
 }
 
-/**
- * Wall graphic for the big screen on the back wall.
- * Deliberately generic club-colour typography — no official crest or trademarked mark.
- */
-export function titleBanner(theme: Theme) {
-  const key = `banner-${theme.name}`;
-  if (cache.has(key)) return cache.get(key)!;
-  const cv = document.createElement('canvas');
-  cv.width = 1024; cv.height = 576;
-  const ctx = cv.getContext('2d')!;
-
-  const g = ctx.createLinearGradient(0, 0, 0, 576);
-  g.addColorStop(0, '#c9070d');
-  g.addColorStop(1, '#7a0206');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 1024, 576);
-
-  // sweeping white chevrons
-  ctx.save();
-  ctx.globalAlpha = 0.10;
-  ctx.fillStyle = '#fff';
-  for (let i = -600; i < 1400; i += 150) {
-    ctx.beginPath();
-    ctx.moveTo(i, 576); ctx.lineTo(i + 90, 576); ctx.lineTo(i + 330, 0); ctx.lineTo(i + 240, 0);
-    ctx.closePath(); ctx.fill();
-  }
-  ctx.restore();
-
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255,255,255,0.92)';
-  ctx.font = '700 34px "JetBrains Mono", monospace';
-  ctx.fillText('N O R T H   L O N D O N', 512, 150);
-
-  ctx.fillStyle = '#fff';
-  ctx.font = '800 132px Inter, system-ui, sans-serif';
-  ctx.fillText('CHAMPIONS', 512, 300);
-
-  ctx.font = '800 92px Inter, system-ui, sans-serif';
-  ctx.fillText('2025 / 26', 512, 400);
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.55)';
-  ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(300, 440); ctx.lineTo(724, 440); ctx.stroke();
-
-  ctx.fillStyle = 'rgba(255,255,255,0.8)';
-  ctx.font = '500 30px "JetBrains Mono", monospace';
-  ctx.fillText('THE  LONG  WAIT  IS  OVER', 512, 495);
-
-  const tex = new THREE.CanvasTexture(cv);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 8;
-  cache.set(key, tex);
-  return tex;
-}
-
 /** Soft radial blob used as a fake contact shadow / light pool decal. */
 export function radialFalloff(color = '#000', power = 1) {
   const key = `radial-${color}-${power}`;

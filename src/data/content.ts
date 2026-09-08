@@ -352,10 +352,8 @@ export const publication = {
 };
 
 export const education = {
-  degree: 'B.Tech, Computer Science',
-  school: 'SRM Institute of Science and Technology',
-  period: '2019 to 2023',
-  gpa: '9.47 / 10',
+  heading: 'Education',
+  line: "Let's not go there. But I can talk to you about computers all day."
 };
 
 export const awards = [
@@ -389,7 +387,8 @@ export const life = {
   intro:
     'Ask me about myself and you will get: Gym, guitar, doggos and at least one Breaking Bad reference nobody asked for.',
   intro2:
-    'I also answer serious questions with Better Call Saul quotes. My friends stopped finding it funny. I did not. There are a few non-negotiables in life, and gym daily for 2 hours is one of them. Ask about loyalty, huh??? I have been an Arsenal fan since 2013.',
+    'I also answer serious questions with Better Call Saul quotes. My friends stopped finding it funny. I did not. There are a few non-negotiables in life, and gym daily for 2 hours is one of them.',
+  intro3: 'Ask about loyalty, huh??? I have been an Arsenal fan since 2013.',
   gym: {
     icon: '🏋️',
     title: 'Gym, six days a week',
@@ -426,23 +425,9 @@ export const life = {
     body:
       'All of them, no exceptions. If there is a dog in the room then that is where I will be, and I will not be taking questions about it.',
   },
-  sunsets: {
-    icon: '🌇',
-    title: 'Sunsets',
-    body:
-      'The one I cannot explain. Same sun, same physics, and it somehow never looks the same twice. Half my camera roll is just the sky, framed badly, and I keep taking them anyway.',
-  },
-  tv: {
-    icon: '📺',
-    title: 'Breaking Bad, then Better Call Saul',
-    body:
-      'In that order, and it is not close. This is also why I answer ordinary questions with Saul Goodman quotes. I am aware of it. Its showtime folkss.',
-  },
 };
 
-export const lifeOrder = [
-  'gym', 'cooking', 'guitar', 'swimming', 'arsenal', 'dogs', 'sunsets', 'tv',
-] as const;
+export const lifeOrder = ['gym', 'cooking', 'guitar', 'swimming', 'arsenal', 'dogs'] as const;
 
 export const nowPlaying = ['Linkin Park', 'Nickelback', 'Bad Omens', 'Bring Me The Horizon', 'Foo Fighters'];
 

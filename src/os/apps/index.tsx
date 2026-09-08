@@ -20,6 +20,7 @@ export function About() {
       </p>
       <p className="lead" style={{ fontSize: 14.5, marginTop: 14 }}>{life.intro}</p>
       <p className="muted" style={{ fontSize: 13 }}>{life.intro2}</p>
+      <p className="muted" style={{ fontSize: 13 }}>{life.intro3}</p>
 
       <div className="grid2" style={{ marginTop: 18 }}>
         {lifeOrder.map((k) => {
@@ -35,15 +36,9 @@ export function About() {
         })}
       </div>
 
-      <h2>Education</h2>
+      <h2>{education.heading}</h2>
       <div className="card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
-          <div>
-            <h3>{education.degree}</h3>
-            <div className="muted" style={{ fontSize: 12.5 }}>{education.school}</div>
-          </div>
-          <div className="tl-when">{education.period} · GPA {education.gpa}</div>
-        </div>
+        <p className="lead" style={{ margin: 0, fontSize: 14 }}>{education.line}</p>
       </div>
     </div>
   );

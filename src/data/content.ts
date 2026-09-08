@@ -388,7 +388,7 @@ export const life = {
     'Ask me about myself and you will get: Gym, guitar, doggos and at least one Breaking Bad reference nobody asked for.',
   intro2:
     'I also answer serious questions with Better Call Saul quotes. My friends stopped finding it funny. I did not. There are a few non-negotiables in life, and gym daily for 2 hours is one of them.',
-  intro3: 'Ask about loyalty, huh??? I have been an Arsenal fan since 2013.',
+  intro3: 'Also, an Arsenal fan since 2013.',
   gym: {
     icon: '🏋️',
     title: 'Gym, six days a week',

@@ -231,7 +231,7 @@ export function Music() {
       <div className="kicker">~/guitar</div>
       <h1>Me, a guitar, and questionable timing</h1>
       <p className="muted" style={{ fontSize: 13, marginBottom: 16 }}>
-        {songs.length} covers, all filmed badly on a phone. Pick one and it plays right here.
+        {songs.length} covers, all filmed badly on a phone. Pick any of them and it plays right here.
       </p>
 
       {song && video && (
@@ -257,6 +257,17 @@ export function Music() {
           </div>
         </div>
       )}
+
+      {/* Without this the player fills the window and the grid below is invisible, so
+          nobody realises there are nine more videos down there. */}
+      <div className="gp-more">
+        <span className="gp-more-rule" />
+        <span className="gp-more-text">
+          Scroll down for more videos
+          <span className="gp-more-arrow" aria-hidden>↓</span>
+        </span>
+        <span className="gp-more-rule" />
+      </div>
 
       <div className="gp-grid">
         {songs.map((sg, i) => {

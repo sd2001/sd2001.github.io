@@ -491,10 +491,13 @@ export function listenUrl(song: Song) {
 /**
  * The guitar covers, from Swarnabha's Drive folder. `drive` is the file id; titles and
  * artists were checked against the iTunes catalogue rather than guessed from filenames.
+ *
+ * Order matters: the first entry is what the player loads by default, and Carnival of Rust
+ * is the one that should always be sitting at the top.
  */
 export const songs: Song[] = [
-  { title: 'New Divide', artist: 'Linkin Park', album: 'Transformers: Revenge of the Fallen', year: '2009', drive: '1IpUJe_Ydcu7gkK8-98fLiG8wlYdOrAsu' },
   { title: 'Carnival of Rust', artist: 'Poets of the Fall', album: 'Carnival of Rust', year: '2006', drive: '1FJ1jOX7TiCSnq9SFAqNzrVvFGXFBf1-t' },
+  { title: 'New Divide', artist: 'Linkin Park', album: 'Transformers: Revenge of the Fallen', year: '2009', drive: '1IpUJe_Ydcu7gkK8-98fLiG8wlYdOrAsu' },
   { title: 'Dance with the Devil', artist: 'Breaking Benjamin', album: 'Phobia', year: '2006', drive: '1Z5K5YOIYEfztrhC-q4i-6XcWRSWC7f-4' },
   { title: 'Sweater Weather', artist: 'The Neighbourhood', album: 'I Love You.', year: '2012', drive: '1hTwYaV6DCX4QKaO8BSErU-jZeciDo_jR' },
   { title: 'Wonderwall', artist: 'Oasis', album: "(What's the Story) Morning Glory?", year: '1995', drive: '1sl22kTBIbSDYzE3MlrmxrXbx2gKCCK6O' },

@@ -388,13 +388,13 @@
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
 }
 .gp-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.gp-now { max-width: 302px; margin-left: auto; margin-right: auto; }
+.gp-frame { max-width: 268px; margin-left: auto; margin-right: auto; }
 
 .gp-now-meta {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 11px 2px 0;
 }
-.gp-now-title { font-size: 17px; font-weight: 800; letter-spacing: -0.015em; }
+.gp-now-title { font-size: 17px; font-weight: 800; letter-spacing: -0.015em; white-space: nowrap; }
 .gp-now-sub { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
 
 .gp-grid {
@@ -450,3 +450,33 @@
 
 /* The phone layout shows the same app in a normal page, so let tiles breathe. */
 .os.os-flow .gp-grid { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+
+/* The "there is more below" divider in the guitar player. */
+.gp-more {
+  display: flex; align-items: center; gap: 12px;
+  margin: 20px 0 14px;
+}
+.gp-more-rule {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+.gp-more-text {
+  flex: none; display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent-2);
+  padding: 5px 12px; border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(239, 1, 7, 0.32);
+  white-space: nowrap;
+}
+.gp-more-arrow {
+  display: inline-block; font-size: 12px; line-height: 1;
+  animation: gp-bob 1.5s ease-in-out infinite;
+}
+@keyframes gp-bob {
+  0%, 100% { transform: translateY(-1px); opacity: 0.65; }
+  50%      { transform: translateY(3px);  opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gp-more-arrow { animation: none; }
+}

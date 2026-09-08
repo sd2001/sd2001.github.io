@@ -72,7 +72,7 @@ export default function App() {
   const [sound, setSound] = useState(true);
 
   const strum = useCallback(() => {
-    const next = player.next(songs.length);
+    const next = player.advance(songs.length);
     if (sound) strumGuitar(0.45);
     if (mode !== 'monitor') go('monitor');
     osBus.openApp('guitar');

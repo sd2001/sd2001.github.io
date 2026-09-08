@@ -43,14 +43,9 @@ jobs:
       - name: Build
         run: npm run build
 
-      # The old Django-era site lives in V1/ and is not part of the build, but it is
-      # worth keeping reachable at /V1/ so old links and screenshots still resolve.
-      - name: Include the archived V1 site
-        run: |
-          mkdir -p dist/V1
-          cp -R V1/. dist/V1/
-          # Nothing here is a Jekyll site; stop Pages trying to process it.
-          touch dist/.nojekyll
+      - name: Stop Pages trying to Jekyll-process the build
+        run: touch dist/.nojekyll
+
 
       - uses: actions/configure-pages@v5
 

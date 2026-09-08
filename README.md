@@ -58,9 +58,6 @@ Because this is a *user site* served from the domain root, `vite.config.ts` sets
 `base: '/'`. If this were ever moved to a project repo, that has to become
 `base: '/<repo-name>/'`.
 
-The workflow also copies the archived v1 site into `dist/V1/`, so the old portfolio stays
-reachable at https://sd2001.github.io/V1/.
-
 ---
 
 ## How it's put together
@@ -191,4 +188,3 @@ the site; the earlier redacted copy is still in git history if it is ever wanted
 - Phones and portrait tablets get a dedicated layout: the 3D room as a hero band, then the
   same content as a normal scrolling page. The breakpoint is ~820px, chosen because below it
   a 1280x800 screen rendered inside the scene cannot be legible at any camera distance.
-- `V1/` is the previous Django-era portfolio, kept intact.

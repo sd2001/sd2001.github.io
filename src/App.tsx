@@ -6,7 +6,7 @@ import MobileShell from './ui/MobileShell';
 import SceneBoundary from './ui/SceneBoundary';
 import { useDevice } from './ui/useDevice';
 import type { CamMode } from './three/cameraPoses';
-import { DEFAULT_THEME, type ThemeName } from './three/theme';
+import { DEFAULT_THEME } from './three/theme';
 import { osBus } from './os/bus';
 
 export default function App() {
@@ -39,7 +39,6 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [mode, setMode] = useState<CamMode>('intro');
   const [arrived, setArrived] = useState(false);
-  const [themeName, setThemeName] = useState<ThemeName>(DEFAULT_THEME);
 
   // The scene is fully procedural, so "ready" is really "the first frames have compiled".
   useEffect(() => {
@@ -76,7 +75,7 @@ export default function App() {
         {stageSized && (
           <SceneBoundary>
             <Experience
-              themeName={themeName}
+              themeName={DEFAULT_THEME}
               mode={mode}
               onArrive={onArrive}
               onRequestZoom={() => go('monitor')}
@@ -98,8 +97,6 @@ export default function App() {
             <Hud
               mode={mode}
               arrived={arrived}
-              themeName={themeName}
-              onTheme={setThemeName}
               onEnter={() => go('monitor')}
               onBack={() => go('intro')}
               onCredits={() => {

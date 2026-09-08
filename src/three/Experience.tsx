@@ -91,6 +91,7 @@ export default function Experience({
           onRequestZoom={onRequestZoom}
           shadows={q.shadows}
           liveScreen={!hero}
+          atScreen={mode === 'monitor'}
         />
         <Preload all />
       </Suspense>

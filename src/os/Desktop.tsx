@@ -13,7 +13,7 @@ import { osBus } from './bus';
 const BOOT_LINES: { t: string; cls?: string; d: number }[] = [
   { t: 'SwarnabhaOS 2.0.0 (gym-build)  ·  kernel 6.9.0-rep', cls: 'dim', d: 130 },
   { t: '', d: 60 },
-  { t: '[  OK  ] Mounted /dev/bench0 → chest-press', cls: 'ok', d: 150 },
+  { t: '[  OK  ] Mounted /dev/desk0 → gym floor', cls: 'ok', d: 150 },
   { t: '[  OK  ] Started rubber-floor.service', cls: 'ok', d: 110 },
   { t: '[  OK  ] Loaded 6 overhead lamps', cls: 'ok', d: 110 },
   { t: '[  OK  ] neon.tube "ONE MORE REP" online', cls: 'ok', d: 140 },

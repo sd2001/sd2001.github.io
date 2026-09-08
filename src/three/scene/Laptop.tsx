@@ -18,9 +18,91 @@ type Props = {
    * desktop into CSS3D there is pure cost for something a few pixels tall.
    */
   liveScreen?: boolean;
+  /** Show the floating "click me" arrow. Off on phones, where there is nothing to click. */
+  hint?: boolean;
+  /**
+   * Hide the arrow. Driven by the camera mode rather than by arrival, so it fades out the
+   * instant the camera starts moving rather than hanging around through the whole fly-in.
+   */
+  hintHidden?: boolean;
 };
 
-export default function Laptop({ theme, active, onRequestZoom, liveScreen = true }: Props) {
+
+/**
+ * Floating arrow above the laptop, so it is obvious the screen is the thing to click.
+ * Bobs on a sine, scales away once you are sitting at the machine, and is clickable
+ * itself — pointing at a target the user then has to aim past would be annoying.
+ */
+function ClickHint({ theme, hidden, onClick }: { theme: Theme; hidden: boolean; onClick: () => void }) {
+  const group = useRef<THREE.Group>(null);
+  const halo = useRef<THREE.Mesh>(null);
+  const scale = useRef(0);
+  const [hovered, setHovered] = useState(false);
+
+  /** Sized for the wide establishing shot, where the laptop is small in frame. */
+  const BASE = 1.45;
+
+  useFrame(({ clock }, delta) => {
+    const g = group.current;
+    if (!g) return;
+    const t = clock.elapsedTime;
+
+    // ease the whole thing in and out rather than popping
+    const target = hidden ? 0 : 1;
+    scale.current += (target - scale.current) * Math.min(1, delta * 6);
+    const s = scale.current * BASE * (hovered ? 1.14 : 1);
+    g.scale.setScalar(s);
+    g.visible = s > 0.01;
+
+    if (halo.current) {
+      const m = halo.current.material as THREE.MeshBasicMaterial;
+      m.opacity = (0.13 + Math.sin(t * 2.1) * 0.06) * scale.current;
+      const hs = 1 + Math.sin(t * 2.1) * 0.12;
+      halo.current.scale.setScalar(hs);
+    }
+
+    // 0.253 is where the tilted lid tops out; sit clear of it
+    g.position.y = 0.345 + Math.sin(t * 2.1) * 0.03;
+    g.rotation.y = t * 0.7;
+  });
+
+  return (
+    <group
+      ref={group}
+      position={[0, 0.345, -0.02]}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+      onClick={(e) => { e.stopPropagation(); onClick(); }}
+    >
+      {/* shaft */}
+      <mesh position={[0, 0.062, 0]}>
+        <cylinderGeometry args={[0.011, 0.011, 0.075, 8]} />
+        <meshBasicMaterial color={theme.accent} toneMapped={false} />
+      </mesh>
+      {/* head, pointing down at the screen */}
+      <mesh position={[0, 0.0, 0]} rotation={[Math.PI, Math.PI / 4, 0]}>
+        <coneGeometry args={[0.042, 0.062, 4]} />
+        <meshBasicMaterial color={theme.accent} toneMapped={false} />
+      </mesh>
+      {/* soft halo so it reads against the dark wall and catches the bloom */}
+      <mesh ref={halo} position={[0, 0.03, -0.012]}>
+        <circleGeometry args={[0.105, 20]} />
+        <meshBasicMaterial
+          color={theme.accent}
+          transparent
+          opacity={0.16}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+          toneMapped={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+export default function Laptop({
+  theme, active, onRequestZoom, liveScreen = true, hint = true, hintHidden = false,
+}: Props) {
   const lidRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
@@ -171,6 +253,12 @@ export default function Laptop({ theme, active, onRequestZoom, liveScreen = true
           </mesh>
         )}
       </group>
+
+      {/*
+        The arrow lives outside the lid group so it stays vertical — inside it, it would
+        inherit the lid's 15-degree tilt and lean backwards over the screen.
+      */}
+      {hint && <ClickHint theme={theme} hidden={hintHidden} onClick={onRequestZoom} />}
     </group>
   );
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { profile, socials } from '../data/content';
-import { THEMES, type ThemeName } from '../three/theme';
 import type { CamMode } from '../three/cameraPoses';
 
 const ICON: Record<string, string> = {
@@ -10,14 +9,12 @@ const ICON: Record<string, string> = {
 type Props = {
   mode: CamMode;
   arrived: boolean;
-  themeName: ThemeName;
-  onTheme: (t: ThemeName) => void;
   onEnter: () => void;
   onBack: () => void;
   onCredits: () => void;
 };
 
-export default function Hud({ mode, arrived, themeName, onTheme, onEnter, onBack, onCredits }: Props) {
+export default function Hud({ mode, arrived, onEnter, onBack, onCredits }: Props) {
   const [clock, setClock] = useState('');
 
   useEffect(() => {
@@ -35,16 +32,6 @@ export default function Hud({ mode, arrived, themeName, onTheme, onEnter, onBack
         <div className="hud-box">{profile.name}</div>
         <div className="hud-box dim">{profile.role} · {profile.company}</div>
         <div className="hud-box time"><span className="sq" />{clock}</div>
-      </div>
-
-      <div className="hud-tr">
-        <div className="hud-switch" title="Gym look">
-          {(Object.keys(THEMES) as ThemeName[]).map((t) => (
-            <button key={t} className={themeName === t ? 'on' : ''} onClick={() => onTheme(t)}>
-              {THEMES[t].label}
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="hud-bottom">

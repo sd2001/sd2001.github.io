@@ -294,7 +294,7 @@ export function GymLog() {
         the temptation to skip the unglamorous part is exactly where people fall off.
       </p>
       <p className="muted" style={{ fontSize: 12.5 }}>
-        Also, the machine your cursor is currently sitting on is a chest press. Look up.
+        Also, this laptop is on a desk in the middle of a gym, and the chair is a bench. Press Esc and look around.
       </p>
     </div>
   );
@@ -482,7 +482,7 @@ const FILES: Record<string, string> = {
 const NEOFETCH = `        ▄▄▄▄▄▄▄        swarnabha@gym
       ▄█████████▄      ─────────────────────────────
      ███████████▀      OS        SwarnabhaOS 2.0
-     ███████████       Host      Chest Press (incline)
+     ███████████       Host      Desk, gym floor
      ▀█████████▀       Uptime    ${new Date().getFullYear() - 2021} yrs in backend
        ▀▀███▀▀         Shell     zsh
                        Role      ${profile.role} @ ${profile.company}

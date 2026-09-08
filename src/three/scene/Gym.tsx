@@ -14,20 +14,29 @@ type Props = {
   shadows: boolean;
   /** Phones paint the screen instead of mounting the desktop into CSS3D. */
   liveScreen: boolean;
+  /** True once the camera has been sent to the screen. */
+  atScreen: boolean;
 };
 
 /**
  * A small room, laid out for one fixed camera. Everything is placed to read from the
  * establishing shot; nothing is here "for when you walk over there", because you cannot.
  */
-export default function Gym({ theme, laptopActive, onRequestZoom, shadows, liveScreen }: Props) {
+export default function Gym({ theme, laptopActive, onRequestZoom, shadows, liveScreen, atScreen }: Props) {
   return (
     <group>
       <Room theme={theme} shadows={shadows} />
 
       {/* ---- hero: the desk, the laptop, and a bench for a chair ---- */}
       <Desk theme={theme} />
-      <Laptop theme={theme} active={laptopActive} onRequestZoom={onRequestZoom} liveScreen={liveScreen} />
+      <Laptop
+        theme={theme}
+        active={laptopActive}
+        onRequestZoom={onRequestZoom}
+        liveScreen={liveScreen}
+        hint={liveScreen}
+        hintHidden={atScreen}
+      />
       <group position={[0, 0, 0.62]} rotation={[0, Math.PI / 2, 0]}>
         <FlatBench theme={theme} />
       </group>

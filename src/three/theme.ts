@@ -74,6 +74,10 @@ export const THEMES: Record<ThemeName, Theme> = {
   /**
    * Arsenal home gym. Cream walls with a red band at waist height, chrome equipment,
    * bright and clean — club colours running through the whole room.
+   *
+   * NOT currently exposed in the UI: the warehouse look was chosen as the site's identity.
+   * The palette is kept intact so it is one line to bring back — set DEFAULT_THEME below
+   * to 'arsenal', or re-add the switcher to Hud.tsx.
    */
   arsenal: {
     name: 'arsenal',
@@ -109,4 +113,5 @@ export const THEMES: Record<ThemeName, Theme> = {
   },
 };
 
+/** The site's look. Late-night warehouse — chosen over the Arsenal palette above. */
 export const DEFAULT_THEME: ThemeName = 'warehouse';

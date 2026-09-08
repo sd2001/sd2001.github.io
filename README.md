@@ -69,7 +69,7 @@ reachable at https://sd2001.github.io/V1/.
 src/
 ├── data/content.ts        Every word of portfolio content — the single source of truth
 ├── three/
-│   ├── theme.ts           Two complete looks: 'warehouse' and 'arsenal'
+│   ├── theme.ts           The 'warehouse' look (an 'arsenal' palette is kept but unused)
 │   ├── textures.ts        Canvas-drawn textures (rubber tiles, concrete, knurling, banner)
 │   ├── laptopConfig.ts    Desk and laptop dimensions; the camera keyframe DERIVES from these
 │   ├── cameraPoses.ts     The two camera poses
@@ -152,6 +152,9 @@ phone-number-redacted copy of the source resume.
 
 ## Notes
 
+- The site's look is **late-night warehouse**. A full Arsenal-red palette is still defined in
+  `theme.ts` and is one line away (`DEFAULT_THEME`) if it is ever wanted, but it is not exposed
+  in the UI.
 - Arsenal FC is referenced as a supporter, without affiliation. No club crest, cannon or
   other registered mark appears anywhere — the banner and wallpaper use colour and type only.
 - Phones and portrait tablets get a dedicated layout: the 3D room as a hero band, then the

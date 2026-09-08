@@ -388,13 +388,16 @@
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
 }
 .gp-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.gp-frame { max-width: 268px; margin-left: auto; margin-right: auto; }
+/* The width cap belongs on the stage, NOT on .gp-frame: percentage padding resolves
+   against the containing block, so capping the frame itself left padding-top computed
+   from the full window width and made the video several times too tall. */
+.gp-stage { max-width: 300px; margin: 0 auto; }
 
 .gp-now-meta {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 11px 2px 0;
 }
-.gp-now-title { font-size: 17px; font-weight: 800; letter-spacing: -0.015em; white-space: nowrap; }
+.gp-now-title { font-size: 17px; font-weight: 800; letter-spacing: -0.015em; }
 .gp-now-sub { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
 
 .gp-grid {

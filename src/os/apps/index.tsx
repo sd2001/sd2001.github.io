@@ -236,13 +236,18 @@ export function Music() {
 
       {song && video && (
         <div className="gp-now">
-          <div className="gp-frame">
-            <iframe
-              src={video}
-              title={`${song.title} by ${song.artist}`}
-              allow="autoplay; encrypted-media; fullscreen"
-              allowFullScreen
-            />
+          {/* The stage caps the width, so gp-frame's percentage padding resolves against
+              268px and gives a real 3:4 box. Capping gp-frame itself made the padding
+              resolve against the full window width and produced an ~880px tall video. */}
+          <div className="gp-stage">
+            <div className="gp-frame">
+              <iframe
+                src={video}
+                title={`${song.title} by ${song.artist}`}
+                allow="autoplay; encrypted-media; fullscreen"
+                allowFullScreen
+              />
+            </div>
           </div>
           <div className="gp-now-meta">
             <div>

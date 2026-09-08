@@ -40,7 +40,7 @@ export default function Hud({ mode, arrived, onEnter, onBack, onCredits, sound, 
         <button
           className={`hud-btn${sound ? ' on' : ''}`}
           onClick={onToggleSound}
-          title={sound ? 'Sound on — click the guitar to strum it' : 'Sound off'}
+          title={sound ? 'Sound on. The guitar strums when you click it' : 'Sound off'}
         >
           {sound ? '🔊 Sound on' : '🔇 Sound off'}
         </button>
@@ -49,12 +49,12 @@ export default function Hud({ mode, arrived, onEnter, onBack, onCredits, sound, 
       <div className="hud-bottom">
         {!inMonitor && arrived && (
           <div className="hud-prompt">
-            Click the laptop to sit down &nbsp;·&nbsp; click the guitar to play it
+            Click the laptop to sit down &nbsp;·&nbsp; click the guitar to watch me play
           </div>
         )}
         {inMonitor && arrived && (
           <div className="hud-prompt" style={{ animation: 'none', opacity: 0.75 }}>
-            The screen is live — click around it. Press <b>Esc</b> to step back.
+            The screen is live. Click around it, and press <b>Esc</b> to step back.
           </div>
         )}
         <div className="hud-actions">
@@ -67,14 +67,14 @@ export default function Hud({ mode, arrived, onEnter, onBack, onCredits, sound, 
       <div className="hud-bl">
         <div className="hud-social">
           {socials.map((s) => (
-            <a key={s.label} href={s.url} target="_blank" rel="noreferrer" title={`${s.label} — ${s.handle}`}>
+            <a key={s.label} href={s.url} target="_blank" rel="noreferrer" title={`${s.label}: ${s.handle}`}>
               {ICON[s.icon] ?? '•'}
             </a>
           ))}
         </div>
       </div>
 
-      {/* attribution — the concept is Henry Heffernan's */}
+      {/* attribution: the concept is Henry Heffernan's */}
       <div className="hud-credit">
         <span className="hud-credit-line">
           Concept inspired by{' '}

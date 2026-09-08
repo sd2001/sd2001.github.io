@@ -4,8 +4,8 @@ import Hud from './ui/Hud';
 import StartScreen from './ui/StartScreen';
 import MobileShell from './ui/MobileShell';
 import SceneBoundary from './ui/SceneBoundary';
-import NowPlaying from './ui/NowPlaying';
 import { songs } from './data/content';
+import { player } from './os/player';
 import { stopGuitarAudio, strumGuitar } from './audio/guitar';
 import { useDevice } from './ui/useDevice';
 import type { CamMode } from './three/cameraPoses';
@@ -65,22 +65,19 @@ export default function App() {
   }, [mode, go]);
 
   /**
-   * Clicking the guitar advances through the track list and shows the card. playId is
-   * bumped every click so re-clicking the same track replays the animation.
-   */
-  const [track, setTrack] = useState(-1);
-  const [playId, setPlayId] = useState(0);
-  /**
-   * Sound is on by default but nothing can make a noise until the visitor clicks the
-   * guitar, so this never ambushes anyone — it is not autoplay.
+   * Clicking the guitar picks the next cover and opens the player on the laptop screen,
+   * flying the camera there if we are still in the wide shot. The video lives on the
+   * screen rather than in a page overlay, which is the whole conceit of the site.
    */
   const [sound, setSound] = useState(true);
 
   const strum = useCallback(() => {
-    setTrack((i) => (i + 1) % songs.length);
-    setPlayId((n) => n + 1);
-    if (sound) strumGuitar(0.5);
-  }, [sound]);
+    const next = player.next(songs.length);
+    if (sound) strumGuitar(0.45);
+    if (mode !== 'monitor') go('monitor');
+    osBus.openApp('guitar');
+    void next;
+  }, [sound, mode, go]);
 
   const toggleSound = useCallback(() => {
     setSound((on) => {
@@ -118,7 +115,6 @@ export default function App() {
         {device.isPhone && <div className="stage-fade" />}
       </div>
 
-      <NowPlaying song={track >= 0 ? songs[track] : null} playId={playId} />
 
       {device.isPhone ? (
         <MobileShell />

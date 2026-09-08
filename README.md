@@ -84,16 +84,16 @@ src/
 │       └── Gym.tsx        Layout — where everything stands
 ├── audio/guitar.ts        Synthesised guitar strum (WebAudio, no files, no licensing)
 ├── os/                    The desktop that runs on the laptop screen
+│   ├── player.ts          Connects the 3D guitar to the player app inside the screen
 │   ├── Desktop.tsx        Boot sequence, wallpaper, menu bar, icons, dock
 │   ├── Window.tsx         Window chrome and dragging
 │   ├── bus.ts             Lets the page HUD open a window on the laptop
-│   └── apps/              About, Experience, Projects, Skills, Gym, Guitar,
-│                          Arsenal, Resume, Contact, Terminal, Credits
+│   └── apps/              About, Experience, Projects, Guitar player,
+│                          Arsenal, Contact, Terminal, Credits
 └── ui/
     ├── useDevice.ts       phone / tablet / desktop tiering
     ├── MobileShell.tsx    The phone layout (shares the app components)
     ├── SceneBoundary.tsx  Keeps a WebGL failure from blanking the page
-    ├── NowPlaying.tsx     The track card shown when the guitar is clicked
     ├── StartScreen.tsx
     └── Hud.tsx
 ```
@@ -143,20 +143,31 @@ is derived from the same constants, so moving the laptop moves the camera with i
 
 ## The guitar
 
-Clicking the guitar in the room advances through `songs` in `src/data/content.ts` and shows
-a card on the left. Two deliberate choices:
+Clicking the guitar in the room picks the next cover, flies the camera to the laptop, and
+opens the player **on the laptop screen**. The video is never a page overlay; it plays on the
+screen, which is the whole conceit of the site.
 
-- **The strum is synthesised**, not a recording — Karplus-Strong plucked strings through a
-  soft-clip overdrive, generated in the browser (`src/audio/guitar.ts`). No audio files, no
-  licensing, and it works offline. It is a guitar chord, not a reproduction of any track.
-- **The real recording is linked, not hosted.** Each song gets a "Listen to the real thing"
-  link — a direct `url` if one is set, otherwise a Spotify search. Hosting the actual audio
-  would be a copyright problem.
+The videos stream from Swarnabha's Google Drive folder, so the player is Drive's own iframe.
+Three things follow from that:
 
-Sound is on by default but nothing can make a noise until the visitor clicks the guitar, so
-it is never autoplay. There is a toggle in the top-right regardless.
+- **Each file must be shared "Anyone with the link"**, or the embed shows a permission error.
+- **Browsers will not autoplay video with sound**, so the viewer presses play inside the frame.
+  There is no way around this and it is the right default anyway.
+- **Tile artwork is Drive's poster frame** for each video (`lh3.googleusercontent.com/d/<id>`),
+  so the grid shows him actually playing rather than somebody else's album art. Google throttles
+  a burst of ten requests, so each tile retries once before falling back to a typographic tile.
+  `referrerPolicy="no-referrer"` keeps Drive's hotlink protection out of it, and `loading="lazy"`
+  must NOT be used: the screen is a CSS3D-transformed element, so the intersection observer
+  treats every tile as off-screen and lazy images never load.
 
-To add tracks, append to `songs` — `{ title, artist, album?, year?, url? }`.
+Clicking the guitar also plays a **synthesised** strum for immediate feedback: Karplus-Strong
+plucked strings through a soft-clip overdrive, generated in the browser (`src/audio/guitar.ts`).
+No audio files, nothing to license. Sound is on by default but nothing makes a noise until the
+guitar is clicked, so it is never autoplay, and there is a toggle top-right.
+
+To add tracks, append to `songs` in `src/data/content.ts`:
+`{ title, artist, album?, year?, drive?, url? }`. Paste the normal Drive share link into
+`drive`; the file id is extracted from whatever URL shape you give it.
 
 ## Editing content
 
@@ -164,8 +175,8 @@ Almost everything is in **`src/data/content.ts`** — experience, projects, skil
 the training split. Change it there and it updates everywhere, including the terminal's
 `cat` output.
 
-Photos live in `public/img/` (see the README there). `public/resume.pdf` is a
-phone-number-redacted copy of the source resume.
+Photos live in `public/img/` (see the README there). There is deliberately no resume PDF on
+the site; the earlier redacted copy is still in git history if it is ever wanted back.
 
 ---
 

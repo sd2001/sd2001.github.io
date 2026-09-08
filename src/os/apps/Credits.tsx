@@ -1,6 +1,6 @@
 /**
- * Credits. This site's whole concept — a 3D room you fly into, with a working
- * computer screen rendered as real DOM in 3D space — is Henry Heffernan's.
+ * Credits. This site's whole concept, a 3D room you fly into with a working computer
+ * screen rendered as real DOM in 3D space, is Henry Heffernan's.
  * That belongs at the front, not in a footer.
  */
 
@@ -29,7 +29,7 @@ const CREDITS = [
     items: [
       { name: 'three.js', role: 'WebGL renderer', url: 'https://threejs.org', license: 'MIT' },
       { name: 'React Three Fiber', role: 'React renderer for three.js', url: 'https://docs.pmnd.rs/react-three-fiber', license: 'MIT' },
-      { name: 'drei', role: 'R3F helpers — Html, MeshReflectorMaterial, OrbitControls', url: 'https://github.com/pmndrs/drei', license: 'MIT' },
+      { name: 'drei', role: 'R3F helpers: Html, useTexture, RoundedBox', url: 'https://github.com/pmndrs/drei', license: 'MIT' },
       { name: 'postprocessing', role: 'Bloom, vignette, film grain, SMAA', url: 'https://github.com/pmndrs/postprocessing', license: 'Zlib' },
       { name: 'React', role: 'UI', url: 'https://react.dev', license: 'MIT' },
       { name: 'Vite', role: 'Build tooling', url: 'https://vite.dev', license: 'MIT' },
@@ -38,8 +38,8 @@ const CREDITS = [
   {
     heading: 'Type',
     items: [
-      { name: 'Inter', role: 'Interface type — Rasmus Andersson', url: 'https://rsms.me/inter/', license: 'SIL Open Font License 1.1' },
-      { name: 'JetBrains Mono', role: 'Monospace — JetBrains', url: 'https://www.jetbrains.com/lp/mono/', license: 'SIL Open Font License 1.1' },
+      { name: 'Inter', role: 'Interface type, by Rasmus Andersson', url: 'https://rsms.me/inter/', license: 'SIL Open Font License 1.1' },
+      { name: 'JetBrains Mono', role: 'Monospace, by JetBrains', url: 'https://www.jetbrains.com/lp/mono/', license: 'SIL Open Font License 1.1' },
     ],
   },
 ];
@@ -95,14 +95,15 @@ export default function Credits() {
       <hr />
       <h2>What is mine</h2>
       <p style={{ fontSize: 12.8 }}>
-        The gym itself is modelled procedurally in code — every bench, plate, dumbbell, the guitar, the dog and
+        The gym itself is modelled procedurally in code. Every bench, plate, dumbbell, the guitar, the dog and
         the neon are three.js primitives assembled by hand, with no purchased or downloaded 3D assets. The textures
         are drawn to canvas at runtime. The desktop OS, its window manager, the terminal and all written content
         are mine.
       </p>
       <p className="faint" style={{ fontSize: 11.5 }}>
-        Arsenal FC is referenced as a supporter, without affiliation. No club crest, cannon or other registered
-        mark is reproduced anywhere on this site — the banner and wallpaper use colour and type only.
+        Arsenal FC imagery on this site, the framed photograph in the room and the desktop wallpaper, is
+        the property of Arsenal FC and its photographers. Used here by a supporter with no affiliation to
+        or endorsement from the club, and happy to take it down on request.
       </p>
     </div>
   );

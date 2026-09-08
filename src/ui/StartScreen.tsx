@@ -5,7 +5,7 @@ export default function StartScreen({ gone, ready, onStart }: { gone: boolean; r
     <div className={`start${gone ? ' gone' : ''}`}>
       <div>
         <div className="start-card">
-          <div className="l1">{profile.name} — Portfolio 2026</div>
+          <div className="l1">{profile.name} · Portfolio 2026</div>
           <div className="l2">A gym you can walk into. Click start to begin.</div>
           <div className="meta">
             <b>{profile.role}</b> at <b>{profile.company}</b> · {profile.tagline}<br />

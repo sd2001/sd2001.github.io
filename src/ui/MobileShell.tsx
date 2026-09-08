@@ -60,7 +60,7 @@ export default function MobileShell() {
           <a href="https://github.com/henryjeff/portfolio-website" target="_blank" rel="noreferrer">MIT</a>
         </p>
         <p className="m-foot-note">
-          The full 3D version — a gym with a laptop you sit down at — is on desktop.
+          The full 3D version, a gym with a laptop you sit down at, is on desktop.
         </p>
       </footer>
     </div>

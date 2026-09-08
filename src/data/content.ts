@@ -12,9 +12,8 @@ export const profile = {
   company: 'Parspec',
   location: 'Bangalore, India',
   email: 'im.swarnabha2001@gmail.com',
-  resumePath: '/resume.pdf',
   blurb:
-    'I build the unglamorous machinery behind AI products — the pipelines, the vector indexes, the GPU serving layer, the bill at the end of the month.',
+    'Backend engineer by trade. Six days a week in the gym, a guitar in the corner, and a camera roll that is mostly sunsets.',
 };
 
 export const socials = [
@@ -26,14 +25,6 @@ export const socials = [
   { label: 'Instagram', handle: '__swarnabha.d__', url: 'https://www.instagram.com/__swarnabha.d__/', icon: 'instagram' },
 ];
 
-/** Headline numbers used on the About screen. */
-export const stats = [
-  { value: '8.4M', label: 'products searchable', sub: 'one Qdrant collection, hundreds of distributors' },
-  { value: '3M', label: 'datasheets / cycle', sub: 'crawled every 2–3 weeks, inside a 14-day window' },
-  { value: '95%', label: 'p95 latency cut', sub: 'text extraction, 18.5s → 0.95s' },
-  { value: '~$2.6K', label: 'monthly cloud spend removed', sub: 'NAT, cross-AZ and endpoint work' },
-];
-
 export type Bullet = { text: string; tags?: string[] };
 export type Project = {
   id: string;
@@ -42,7 +33,18 @@ export type Project = {
   period: string;
   bullets: Bullet[];
   stack: string[];
+  /** Public GitHub repo, where one exists. Verified against the account, not guessed. */
+  repo?: string;
+  /** Shown instead of a link when there is no public repo. */
+  repoNote?: string;
 };
+
+/** Why none of this is running live. */
+export const projectsNote =
+  'None of these are live anywhere, and that is a financial decision rather than a technical one. ' +
+  'Keeping a pile of student hackathon projects awake on EC2 costs more every month than any of them ' +
+  'ever won in prize money, so my wallet and I came to an arrangement. The code is on GitHub though, ' +
+  'and it all still runs if you clone it.';
 
 export type Role = {
   id: string;
@@ -61,32 +63,31 @@ export const experience: Role[] = [
   {
     id: 'parspec',
     company: 'Parspec',
-    companyNote: 'AI platform digitizing building-product data for electrical distributors, manufacturers & contractors',
+    companyNote: 'AI platform digitizing building-product data for electrical distributors and manufacturers',
     title: 'Software Engineer 2',
-    period: 'Jan 2025 — Present',
+    period: 'Jan 2025 to now',
     location: 'Bangalore',
     current: true,
-    summary:
-      'Promoted SE-1 → SE-2 in Feb 2026. I own search and the data pipelines feeding it: crawling the manufacturer web, turning PDFs into structured product data, and serving vector search over millions of SKUs without the GPU bill getting away from us.',
+    summary: 'Promoted SE-1 to SE-2 in Feb 2026. I own search and the pipelines that feed it.',
     groups: [
       {
-        heading: 'Crawler Pipeline Rebuild',
+        heading: 'Crawler pipeline rebuild',
         bullets: [
           {
-            text: 'Rebuilt the crawler that pulls 3M manufacturer datasheets off the web every 2–3 weeks — a cycle that has to finish inside 14 days before the next one starts. Moved pipeline state out of Jira ticket statuses across 5,000 manufacturers into Postgres and made it event-driven, tracking each PDF rather than whole manufacturers, so one bad file no longer forces a 10,000-product rerun.',
+            text: 'Rebuilt the crawler that pulls 3M manufacturer datasheets every two to three weeks. Moved pipeline state out of Jira ticket statuses into Postgres and made it event-driven per PDF, so one bad file no longer forces a 10,000-product rerun.',
             tags: ['PostgreSQL', 'event-driven'],
           },
           {
-            text: 'Re-platformed from fixed EC2 nodes — where each stage sat on its own instances and a slow stage meant manually adding machines — onto EKS, so stages scale on their own and we spend only where a stage needs it. Sizing on AWS Graviton modelled ~35% lower cost ($2,657 → $1,718/mo).',
+            text: 'Re-platformed from fixed EC2 nodes onto EKS so stages scale on their own. Graviton sizing modelled about 35% lower cost.',
             tags: ['EKS', 'Graviton', '−35% cost'],
           },
         ],
       },
       {
-        heading: 'Datasheet Search & Ingestion — ~1.4M product families',
+        heading: 'Datasheet search and ingestion, ~1.4M product families',
         bullets: [
           {
-            text: 'Built the pipeline turning manufacturer PDFs into a searchable catalogue across 3 Qdrant collections. Each page routes to the cheapest reader that handles it: plain text first, Docling/TableFormer on GPU for tables, and only genuinely hard pages reach a paid vision model (Qwen3-VL-32B, then Gemini 2.5 Flash) — so spend tracks difficulty, not page count.',
+            text: 'Turned manufacturer PDFs into a searchable catalogue across three Qdrant collections. Every page routes to the cheapest reader that can handle it, so a paid vision model only ever sees the hard ones.',
             tags: ['Qdrant', 'Docling', 'Qwen3-VL', 'Gemini'],
           },
           {
@@ -94,53 +95,50 @@ export const experience: Role[] = [
             tags: ['0.906 macro-F1'],
           },
           {
-            text: 'Made part-number search typo-tolerant by indexing each code as overlapping 3-character chunks, so a search for LC1D18B7 still finds LC1D18-B7 where ordinary keyword search returns nothing — with a similarity floor that abstains instead of guessing.',
-            tags: ['trigram', 'abstention'],
-          },
-          {
-            text: 'Closed a silent-failure hole where a datasheet that failed extraction vanished with no retry and no record it had ever been attempted.',
+            text: 'Made part-number search typo tolerant by indexing each code as overlapping three-character chunks, so a search for LC1D18B7 still finds LC1D18-B7.',
+            tags: ['trigram'],
           },
         ],
       },
       {
-        heading: 'Inventory Search — 8.4M products, 100s of distributors',
+        heading: 'Inventory search, 8.4M products',
         bullets: [
           {
-            text: 'Built the search behind Parspec’s Crossing product on a single Qdrant collection. Every query runs three searches at once — a 768-dim all-mpnet-base-v2 semantic vector plus two BM25 keyword vectors — merged with Reciprocal Rank Fusion.',
+            text: 'Built the search behind Crossing on a single Qdrant collection. Every query runs a 768-dim semantic vector and two BM25 keyword vectors at once, merged with Reciprocal Rank Fusion.',
             tags: ['hybrid search', 'RRF', 'BM25'],
           },
           {
-            text: 'Every distributor gets its own HNSW search graph inside that one index, so catalogues stay isolated without post-filtering, and int8 compression with rescoring cut vector memory to ~25% at the same quality.',
+            text: 'Every distributor gets its own HNSW graph inside that one index, and int8 compression with rescoring cut vector memory to about 25% at the same quality.',
             tags: ['HNSW', 'int8', '−75% memory'],
           },
           {
-            text: 'Re-ranked the top 50 hits on GPU with an ms-marco-MiniLM-L6-v2 cross-encoder, and added an LLM category classifier (Gemini, GPT-5-nano) that runs alongside the search so it costs no extra wall-clock time.',
-            tags: ['cross-encoder', 'reranking'],
+            text: 'Re-ranked the top 50 hits on GPU with a cross-encoder, with an LLM category classifier running alongside the search so it costs no extra wall-clock time.',
+            tags: ['cross-encoder'],
           },
           {
-            text: 'Translated the shorthand electricians actually search with into the wording distributors store, so "16A 1 pole" matches products described a dozen different ways and every spelling of a part number lands on one product. Grouping by product then shows a customer their true stock across every warehouse instead of one row per warehouse.',
+            text: 'Translated the shorthand electricians actually type into the wording distributors store, so "16A 1 pole" matches products described a dozen different ways.',
             tags: ['query rewriting'],
           },
           {
-            text: 'Migrated 7.1M live inventory records from DynamoDB into Qdrant with AI enrichment on each record, and keep the two in sync within seconds through change-data-capture: DynamoDB Streams → Lambda → SQS, drained by EKS workers that enrich, embed and write into Qdrant. A ~73% prompt cache hit rate made incident replays near-free.',
-            tags: ['CDC', 'DynamoDB Streams', '7.1M records'],
+            text: 'Migrated 7.1M live records from DynamoDB into Qdrant and keep the two in sync within seconds through change-data-capture.',
+            tags: ['CDC', '7.1M records'],
           },
         ],
       },
       {
-        heading: 'GPU Serving, Performance & Cloud Cost',
+        heading: 'GPU serving, performance and cloud cost',
         bullets: [
           {
-            text: 'Moved all GPU inference from Tesla T4 onto NVIDIA L4 (g6) instances and converted the models to TensorRT/ONNX, which raised throughput enough to keep full FP32 precision instead of dropping to FP16 for latency. The BERT category model now serves 40 req/s per pod where it saturated past 15, and text embedding holds sub-100ms p95 at 30 req/s against 350ms at 15.',
-            tags: ['TensorRT', 'ONNX', 'NVIDIA L4'],
+            text: 'Moved GPU inference from T4 onto L4 and converted the models to TensorRT/ONNX. Throughput rose enough to keep full FP32 instead of dropping to FP16 for latency.',
+            tags: ['TensorRT', 'NVIDIA L4'],
           },
           {
-            text: 'Cut p95 text extraction from 18.5s to 0.95s — 95% faster. The tail turned out to be memory fragmentation and OOM kills, not parsing: I added locking around the shared PyMuPDF (fitz) handles to stop the multithreaded path segfaulting and getting killed (exit 137), and moved the service onto c8i instances.',
-            tags: ['PyMuPDF', 'p95 18.5s → 0.95s'],
+            text: 'Cut p95 text extraction from 18.5s to 0.95s. The tail turned out to be memory fragmentation and OOM kills, not parsing.',
+            tags: ['p95 18.5s → 0.95s'],
           },
           {
-            text: 'Took ~$2.6K/month out of the cloud bill. It started as a ~$5,000/mo NAT charge with no attribution, so we tagged every service at module level and read VPC flow logs against those tags until every dollar had an owner. Then: S3, DynamoDB, CloudWatch and SNS onto private endpoints to keep traffic inside AWS (30–40%), chatty services re-homed into the account calling them ($560/mo), and cross-AZ gateway hops killed (~$2,100/mo).',
-            tags: ['VPC flow logs', 'PrivateLink', '−$2.6K/mo'],
+            text: 'Took about $2.6K a month off the cloud bill. It started as a $5,000 NAT charge with no attribution, so we tagged every service and read VPC flow logs until every dollar had an owner.',
+            tags: ['−$2.6K/mo'],
           },
         ],
       },
@@ -150,31 +148,30 @@ export const experience: Role[] = [
   {
     id: 'pibit',
     company: 'Pibit.ai',
-    companyNote: 'YC W21 — unlocking insight from vastly unstructured insurance / underwriting data',
-    title: 'SDE-1, Backend & DevOps',
-    period: 'Jan 2023 — Dec 2024',
+    companyNote: 'YC W21, unlocking insight from unstructured insurance and underwriting data',
+    title: 'SDE-1, Backend and DevOps',
+    period: 'Jan 2023 to Dec 2024',
     location: 'Bangalore',
-    summary:
-      'Owned Lossrun, one of the insurance lines of business, end to end — the logic, the production server it ran on, and the AWS infra and CI/CD underneath it.',
+    summary: 'Owned Lossrun, one of the insurance lines of business, end to end.',
     groups: [
       {
         heading: 'What I shipped',
         bullets: [
           {
-            text: 'Integrated Lossrun (Insurance LOB), optimised its core logical components on our production server and owned it thereafter, running the infra and CI/CD on AWS.',
+            text: 'Integrated Lossrun and then owned it: the logic, the production server it ran on, and the AWS infra and CI/CD underneath.',
             tags: ['ownership'],
           },
           {
-            text: 'Maintained and optimised the insurance data extraction pipeline by 18%, and set up analytics for logging and error tracebacks so failures stopped being invisible.',
-            tags: ['+18% throughput'],
+            text: 'Optimised the insurance data extraction pipeline by 18% and set up logging and error tracebacks so failures stopped being invisible.',
+            tags: ['+18%'],
           },
           {
-            text: 'Introduced multi-stage Docker builds for faster, smaller images, and improved K8s pod behaviour under deploy using graceful shutdown.',
+            text: 'Introduced multi-stage Docker builds for smaller images and graceful shutdown so deploys stopped dropping requests.',
             tags: ['Docker', 'Kubernetes'],
           },
           {
-            text: 'Built PiEval, an end-to-end analytics-driven testing framework, from scratch — automating test and logic coverage reports for templates and APIs after every deployment. It replaced manual operations-driven testing and saved up to 3 days ahead of production and client releases.',
-            tags: ['PiEval', '−3 days per release'],
+            text: 'Built PiEval from scratch, an analytics-driven testing framework that reported coverage for templates and APIs after every deploy. It replaced manual testing and saved up to three days per release.',
+            tags: ['PiEval', '−3 days/release'],
           },
         ],
       },
@@ -184,17 +181,19 @@ export const experience: Role[] = [
   {
     id: 'mitacs',
     company: 'Mitacs GRI 2022',
-    companyNote: 'University of Manitoba, Winnipeg — under Prof. Shaowei Wang',
+    companyNote: 'University of Manitoba, under Prof. Shaowei Wang',
     title: 'Research Intern',
-    period: 'Jun 2022 — Sep 2022',
-    location: 'Canada',
+    period: 'Jun 2022 to Sep 2022',
+    location: 'Winnipeg, Canada',
     summary: 'Adversarial robustness of deep-learning vulnerability detectors.',
     groups: [
       {
         heading: 'Research',
         bullets: [
-          { text: 'Assessed the robustness of deep-learning vulnerability detection via code augmentation, measuring the flip ratio when semantically-equivalent transformations are applied to source.' },
-          { text: 'Analysed performance metrics across program transformation techniques, building on prior work in the area.' },
+          {
+            text: 'Measured how easily deep-learning vulnerability detectors break when you feed them semantically equivalent code, tracking the flip ratio across program transformations.',
+            tags: ['flip ratio'],
+          },
         ],
       },
     ],
@@ -203,38 +202,40 @@ export const experience: Role[] = [
   {
     id: 'reverselabz',
     company: 'ReverseLabz',
-    companyNote: 'PlateUp Health — live on the Play Store and App Store, globally',
+    companyNote: 'PlateUp Health, live on the Play Store and App Store',
     title: 'Backend Engineering Member',
-    period: 'Dec 2021 — Dec 2022',
-    location: 'Remote — Goa',
-    summary: 'Backend for a consumer health app on its way to its first revenue.',
+    period: 'Dec 2021 to Dec 2022',
+    location: 'Remote, Goa',
+    summary: 'Backend for a consumer health app on its way to first revenue.',
     groups: [
       {
         heading: 'What I shipped',
         bullets: [
-          { text: 'Scaled the backend past 10k users, refactoring and cutting API response time by 40% while improving personalization.', tags: ['−40% latency'] },
-          { text: 'Designed and implemented the live booking system connecting doctors and users — the feature that started the company’s first revenue.' },
-          { text: 'Built a follow graph and gamified content to accelerate the social side of the platform, lifting user retention.' },
+          { text: 'Scaled the backend past 10k users and cut API response time by 40%.', tags: ['−40% latency'] },
+          { text: 'Designed and built the live doctor booking system, which is what started the company earning.' },
+          { text: 'Added a follow graph and gamified content, which lifted retention.' },
         ],
       },
     ],
-    stack: ['Python', 'Flask', 'Flask-RESTPlus', 'PostgreSQL', 'Redis', 'AWS', 'Apache Kafka'],
+    stack: ['Python', 'Flask', 'PostgreSQL', 'Redis', 'AWS', 'Apache Kafka'],
   },
   {
     id: 'interviewvector',
     company: 'InterviewVector',
-    companyNote: 'Helping companies scale their hiring process 5x',
+    companyNote: 'Helping companies scale hiring',
     title: 'Backend / DevOps Intern',
-    period: 'Jun 2021 — Aug 2021',
-    location: 'Remote — Gurgaon',
-    summary: 'First taste of production infrastructure: CI/CD from GitHub into AWS.',
+    period: 'Jun 2021 to Aug 2021',
+    location: 'Remote, Gurgaon',
+    summary: 'First taste of production infrastructure.',
     groups: [
       {
         heading: 'What I shipped',
         bullets: [
-          { text: 'Set up CI/CD pipelines and test workflows for auto-deployment of repositories from GitHub to AWS at scale.' },
-          { text: 'Automated deployment on PR merge using CodeDeploy, CodeBuild and CodePipeline — cutting manual work and speeding up releases by 50%.', tags: ['CodePipeline'] },
-          { text: 'Devised backup schedules — weekly, monthly and yearly — tied to every release, and documented the whole source-to-deployment strategy for the development and test servers.' },
+          {
+            text: 'Set up CI/CD from GitHub to AWS with CodeDeploy, CodeBuild and CodePipeline, automating deploys on PR merge and halving release time.',
+            tags: ['CodePipeline'],
+          },
+          { text: 'Wrote the backup schedules and documented the whole source-to-deploy path for the dev and test servers.' },
         ],
       },
     ],
@@ -246,58 +247,61 @@ export const projects: Project[] = [
   {
     id: 'highwayhelp',
     title: 'HighwayHelp',
-    subtitle: 'Razorpay FTX 2021 Global Hackathon — Winners, out of 500+ teams',
+    subtitle: 'Razorpay FTX 2021 Global Hackathon, winners out of 500+ teams',
     period: '2021',
+    repo: 'https://github.com/sd2001/FTX-Hackathon-Submission---FTX-Hackathon-Submission---2ybuar944uop',
     bullets: [
-      { text: 'An internet-independent, live-location tracking tool for stranded drivers in remote areas, letting them reach nearby mechanics with no data connection.' },
-      { text: 'Pulled latitude and longitude off the local SIM network and fell back to plain text messaging wherever connectivity was thin.' },
-      { text: 'Stored user locations in Elasticsearch for consistent streaming through Google’s location-tracking APIs, with RabbitMQ queuing requests under high streaming volume.' },
-      { text: 'Used Haversine distance plus Dijkstra’s algorithm to route to the nearest available mechanic, and integrated Razorpay APIs so the payment happened in-flow.' },
+      { text: 'Live-location help for drivers stranded somewhere with no data connection, so they can still reach a mechanic.' },
+      { text: 'Pulled coordinates off the local SIM network and fell back to plain SMS wherever signal was thin.' },
+      { text: 'Elasticsearch held the locations, RabbitMQ absorbed the streaming load, and Haversine plus Dijkstra picked the nearest mechanic.' },
+      { text: 'Razorpay APIs handled payment in-flow, so the whole thing finished without a phone call.' },
     ],
     stack: ['Python', 'Elasticsearch', 'RabbitMQ', 'React Native', 'Azure', 'Razorpay API'],
   },
   {
     id: 'pariksha',
     title: 'Pariksha',
-    subtitle: 'AthenaHack — Winners, out of 90+ teams',
+    subtitle: 'AthenaHack, winners out of 90+ teams',
     period: '2021',
+    repoNote: 'Private repo. Happy to walk through it.',
     bullets: [
-      { text: 'Examination-as-a-Service: automates an online exam start to finish, cutting the time to run one by up to 35%.' },
-      { text: 'Transformer-generated questions and answers with auto-evaluation, plus a key-point summarizer that doubles the value of last-minute preparation.' },
-      { text: 'Comparative test-score feedback for every participant rather than a bare grade.' },
+      { text: 'Examination as a service: runs an online exam start to finish and cuts the time to set one up by about 35%.' },
+      { text: 'Transformers generated the questions and auto-evaluated the answers, with a key-point summarizer for last-minute revision.' },
     ],
-    stack: ['FastAPI', 'MongoDB', 'spaCy', 'PyTorch', 'Transformers'],
+    stack: ['FastAPI', 'MongoDB', 'spaCy', 'PyTorch'],
   },
   {
     id: 'nodemart',
     title: 'NodeMart',
     subtitle: 'ShadowFax LEAP Hackathon',
     period: '2021',
+    repoNote: 'Private repo. Happy to walk through it.',
     bullets: [
-      { text: 'A one-stop attempt at 15-minute e-commerce delivery.' },
-      { text: 'Product recommendations from content filtering, collaborative filtering and past order history via K-Means clustering.' },
-      { text: 'Apriori association rules to surface order patterns and detect weekly and monthly recurring orders, exposed as APIs around the models.' },
+      { text: 'An attempt at 15-minute e-commerce delivery, back before that was a normal thing to say.' },
+      { text: 'Recommendations from content and collaborative filtering with K-Means, and Apriori rules to spot recurring weekly and monthly orders.' },
     ],
     stack: ['FastAPI', 'scikit-learn', 'pandas', 'MySQL', 'AWS'],
   },
   {
     id: 'rockodrum',
     title: 'ROCK-o-DRUM',
-    subtitle: 'Aero-virtual drums in OpenCV — 24★ on GitHub',
+    subtitle: 'Air drums in OpenCV, 24 stars',
     period: '2020',
+    repo: 'https://github.com/sd2001/ROCK-o-DRUM',
     bullets: [
-      { text: 'Play a drum kit in mid-air: colour-tracked drumsticks over a webcam feed trigger samples when they cross virtual pad regions.' },
-      { text: 'The project where the guitar habit and the code habit finally collided.' },
+      { text: 'Play a drum kit in mid-air: colour-tracked sticks over a webcam trigger samples when they cross virtual pads.' },
+      { text: 'The project where the guitar habit and the code habit finally ran into each other.' },
     ],
     stack: ['Python', 'OpenCV', 'NumPy', 'pygame'],
   },
   {
     id: 'image2caption',
     title: 'Image2Caption',
-    subtitle: 'CNN-LSTM captioning — 13★ on GitHub',
+    subtitle: 'CNN-LSTM captioning, 13 stars',
     period: '2020',
+    repo: 'https://github.com/sd2001/Image2Caption',
     bullets: [
-      { text: 'CNN-LSTM architecture: VGG16 transfer learning for image features, LSTMs for sequence prediction, trained on Flickr8k.' },
+      { text: 'VGG16 for image features, LSTMs for the sequence, trained on Flickr8k.' },
       { text: 'Trained with progressive loading through Python generators so unused sequences never sat in RAM.' },
     ],
     stack: ['TensorFlow', 'Keras', 'Streamlit'],
@@ -305,66 +309,69 @@ export const projects: Project[] = [
   {
     id: 'efficientnet',
     title: 'EfficientNet, from the paper',
-    subtitle: 'Rethinking Model Scaling for CNNs — 6★ on GitHub',
+    subtitle: 'Rethinking Model Scaling for CNNs, 6 stars',
     period: '2021',
+    repo: 'https://github.com/sd2001/EfficientNet',
     bullets: [
       { text: 'Reimplemented EfficientNet in TensorFlow 2 to get at the intuition behind compound scaling.' },
-      { text: 'Hunted for the right combination of FLOPs, accuracy, parameter count and inference time, and found that scaling large (500×500) images creates memory bottlenecks in the bottom layers that dominate performance.' },
+      { text: 'Found that scaling 500x500 images creates memory bottlenecks in the bottom layers that dominate everything else.' },
     ],
     stack: ['TensorFlow 2', 'Keras'],
   },
   {
     id: 'deeppixel',
     title: 'DeepPixel',
-    subtitle: 'Open source — PSoC 2020',
+    subtitle: 'Open source contribution, PSoC 2020',
     period: '2020',
+    repo: 'https://github.com/sd2001/DeepPixel',
     bullets: [
-      { text: 'Implemented Canny and Holistically-Nested edge detection from scratch with SciPy, NumPy and Matplotlib.' },
-      { text: 'Added image quality enhancement via BRISQUE and a blur-detection score.' },
+      { text: 'Wrote Canny and Holistically-Nested edge detection from scratch with SciPy and NumPy, merged upstream into smaranjitghose/DeepPixel.' },
+      { text: 'Added image quality scoring with BRISQUE and a blur-detection score.' },
     ],
     stack: ['SciPy', 'NumPy', 'Matplotlib'],
   },
   {
     id: 'fuzzyurls',
     title: 'FuzzyUrls',
-    subtitle: 'Crio.do tutorial contribution — 9★ on GitHub',
+    subtitle: 'Crio.do published tutorial, 9 stars',
     period: '2021',
+    repo: 'https://github.com/sd2001/FuzzyUrls',
     bullets: [
-      { text: 'A URL shortener contributed as a published project tutorial, engineered in Python/Django with MongoDB and hosted live.' },
+      { text: 'A URL shortener written up as a project tutorial for other people to build along with.' },
     ],
     stack: ['Python', 'Django', 'MongoDB'],
   },
 ];
 
 export const publication = {
-  title: 'Optimizing Apache Kafka Deployments — configuration customization is all you need',
+  title: 'Optimizing Apache Kafka Deployments: configuration customization is all you need',
   venue: 'IEEE',
-  period: 'Jan 2023 — Jun 2023',
+  period: 'Jan 2023 to Jun 2023',
   blurb:
-    'Tuning Kafka around its four competing pillars — latency, throughput, durability and availability — and showing that most real deployments are mis-tuned by default rather than under-provisioned.',
+    'Tuning Kafka around its four competing pillars of latency, throughput, durability and availability, and showing that most real deployments are mis-tuned by default rather than under-provisioned.',
 };
 
 export const education = {
   degree: 'B.Tech, Computer Science',
   school: 'SRM Institute of Science and Technology',
-  period: '2019 — 2023',
+  period: '2019 to 2023',
   gpa: '9.47 / 10',
 };
 
 export const awards = [
-  { year: '12/2021', text: 'Winners — AthenaHack (90+ teams) and Razorpay FTX 2021 Global Hackathon (500+ teams)' },
-  { year: '10/2020', text: 'Runners-up — Friendship Goals Deep Learning Challenge on HackerEarth (500+ participants)' },
+  { year: '12/2021', text: 'Winners at AthenaHack (90+ teams) and the Razorpay FTX 2021 Global Hackathon (500+ teams)' },
+  { year: '10/2020', text: 'Runners-up at the Friendship Goals Deep Learning Challenge on HackerEarth (500+ participants)' },
 ];
 
 export const leadership = [
   {
     org: 'Syndicate, Next Tech Lab',
-    period: 'Feb 2020 — May 2023',
+    period: 'Feb 2020 to May 2023',
     text: 'Tesla Lab: moderated lab proceedings, coordinated intra-lab hackathons and supervised tech sessions.',
   },
   {
     org: 'Project Tutorial Contributor, Crio.do',
-    period: 'Mar 2021 — Apr 2021',
+    period: 'Mar 2021 to Apr 2021',
     text: 'Contributed a URL-shortening project (FuzzyUrls) built with Python, Django and MongoDB, hosted live on a server.',
   },
 ];
@@ -373,63 +380,142 @@ export const skills: { group: string; items: string[] }[] = [
   { group: 'Languages', items: ['Python', 'C++', 'Go', 'SQL', 'TypeScript'] },
   { group: 'Frameworks', items: ['FastAPI', 'Flask', 'Django', 'PyTorch', 'TensorRT / ONNX', 'sentence-transformers', 'PyMuPDF', 'asyncio', 'SQLAlchemy'] },
   { group: 'Data & Search', items: ['PostgreSQL', 'DynamoDB', 'MySQL', 'MongoDB', 'Redis / Valkey', 'Qdrant', 'OpenSearch', 'Elasticsearch'] },
-  { group: 'AI / ML', items: ['RAG', 'Vector search', 'Embeddings', 'Cross-encoder reranking', 'HNSW', 'BM25 + RRF', 'LLMs — Gemini, Qwen-VL', 'BERT'] },
-  { group: 'Cloud & DevOps', items: ['AWS EKS', 'Lambda', 'SQS / SNS', 'S3', 'VPC / PrivateLink', 'CloudFormation', 'Kubernetes', 'Docker', 'CI/CD', 'GPU — L4 / T4'] },
+  { group: 'AI / ML', items: ['RAG', 'Vector search', 'Embeddings', 'Cross-encoder reranking', 'HNSW', 'BM25 + RRF', 'LLMs: Gemini, Qwen-VL', 'BERT'] },
+  { group: 'Cloud & DevOps', items: ['AWS EKS', 'Lambda', 'SQS / SNS', 'S3', 'VPC / PrivateLink', 'CloudFormation', 'Kubernetes', 'Docker', 'CI/CD', 'GPU: L4 / T4'] },
 ];
 
-/** Non-work content — the reason the scene is a gym and not an office. */
+/** The reason the scene is a gym and not an office. Kept short on purpose. */
 export const life = {
+  intro:
+    'Ask me about myself and you will get: Gym, guitar, doggos and at least one Breaking Bad reference nobody asked for.',
+  intro2:
+    'I also answer serious questions with Better Call Saul quotes. My friends stopped finding it funny. I did not. There are a few non-negotiables in life, and gym daily for 2 hours is one of them. Ask about loyalty, huh??? I have been an Arsenal fan since 2013.',
   gym: {
-    title: 'Six days a week',
+    icon: '🏋️',
+    title: 'Gym, six days a week',
     body:
-      'Push, pull, legs, twice over. The gym is the one system I get to debug with a completely honest feedback loop — the weight either moves or it does not, and no amount of clever reasoning changes the number on the bar.',
-    split: [
-      { day: 'Mon', focus: 'Push', detail: 'Chest, shoulders, triceps' },
-      { day: 'Tue', focus: 'Pull', detail: 'Back, biceps, rear delts' },
-      { day: 'Wed', focus: 'Legs', detail: 'Quads, hams, calves' },
-      { day: 'Thu', focus: 'Push', detail: 'Volume day' },
-      { day: 'Fri', focus: 'Pull', detail: 'Heavy rows, deadlift' },
-      { day: 'Sat', focus: 'Legs', detail: 'Squat focus' },
-      { day: 'Sun', focus: 'Rest', detail: 'Guitar, football, the dog' },
-    ],
+      'Two hours a day, six days a week, non-negotiable. Push, pull, legs, twice over. The weight either moves or it does not, which makes it the most honest feedback I get all day.',
+  },
+  cooking: {
+    icon: '🍗',
+    title: 'Cooking',
+    body:
+      'Chicken, in an unreasonable number of flavours. Grilled, curried, tandoori, shredded into whatever needs protein. Eating clean is much easier when the clean thing actually tastes good, so that is where the effort goes.',
   },
   guitar: {
+    icon: '🎸',
     title: 'Guitar',
     body:
-      'Rock, mostly. Linkin Park, Nickelback, Bad Omens — the kind of music that is objectively best played too loud. Learning an unfamiliar riff is the same loop as learning an unfamiliar codebase: slow it down, isolate the part that keeps breaking, repeat it until it stops being conscious.',
+      'Rock, loud, and badly at first. Learning a riff turns out to be the same loop as learning a codebase: slow it down, find the bar that keeps breaking, repeat until your hands stop thinking. There is one in this room, by the way.',
   },
-  dogs: {
-    title: 'Dogs',
-    body: 'Unreservedly. If there is a dog in the room, that is where I will be. This is not negotiable and I will not be taking questions.',
+  swimming: {
+    icon: '🏊',
+    title: 'Swimming',
+    body:
+      'Strictly a hot-day activity. Bangalore summers make a very strong case for water, and I have never once regretted going.',
   },
   arsenal: {
+    icon: '🔴',
     title: 'Arsenal',
     body:
-      'North London, red half. Years of patience, and the wallpaper on this laptop finally reflects it. Up the Arsenal.',
+      'Thirteen years in, red half of North London. Özil was my guy and I will happily defend that. The photo on the wall behind this laptop is not coming down for a while.',
+  },
+  dogs: {
+    icon: '🐕',
+    title: 'Dogs',
+    body:
+      'All of them, no exceptions. If there is a dog in the room then that is where I will be, and I will not be taking questions about it.',
+  },
+  sunsets: {
+    icon: '🌇',
+    title: 'Sunsets',
+    body:
+      'The one I cannot explain. Same sun, same physics, and it somehow never looks the same twice. Half my camera roll is just the sky, framed badly, and I keep taking them anyway.',
+  },
+  tv: {
+    icon: '📺',
+    title: 'Breaking Bad, then Better Call Saul',
+    body:
+      'In that order, and it is not close. This is also why I answer ordinary questions with Saul Goodman quotes. I am aware of it. Its showtime folkss.',
   },
 };
+
+export const lifeOrder = [
+  'gym', 'cooking', 'guitar', 'swimming', 'arsenal', 'dogs', 'sunsets', 'tv',
+] as const;
 
 export const nowPlaying = ['Linkin Park', 'Nickelback', 'Bad Omens', 'Bring Me The Horizon', 'Foo Fighters'];
 
 /**
  * Tracks the guitar in the room cycles through when you click it.
- * More to come — Swarnabha is sending the full list.
+ * More to come. Swarnabha is sending the full list.
  */
 export type Song = {
   title: string;
   artist: string;
   album?: string;
   year?: string;
-  /** Optional direct link. Without one the card falls back to a search URL. */
+  /**
+   * A Google Drive link to a video of Swarnabha playing it. Paste the normal share link,
+   * the file id is pulled out automatically. The file has to be shared as
+   * "Anyone with the link" or the embed will just show a permission error.
+   */
+  drive?: string;
+  /** Any other link worth having, e.g. the official track. */
   url?: string;
 };
 
-/** Where to actually listen. We cannot host the recording, so we point at it. */
+/** Pull the file id out of whatever shape of Drive link got pasted in. */
+export function driveFileId(link?: string): string | null {
+  if (!link) return null;
+  const patterns = [
+    /\/file\/d\/([A-Za-z0-9_-]{10,})/,   // .../file/d/<id>/view
+    /[?&]id=([A-Za-z0-9_-]{10,})/,       // ...open?id=<id>
+    /\/d\/([A-Za-z0-9_-]{10,})/,         // .../d/<id>
+  ];
+  for (const re of patterns) {
+    const m = link.match(re);
+    if (m) return m[1];
+  }
+  // already a bare id
+  return /^[A-Za-z0-9_-]{10,}$/.test(link.trim()) ? link.trim() : null;
+}
+
+/** Drive's own player, which is the only reliable way to embed a Drive video. */
+export function drivePreviewUrl(link?: string): string | null {
+  const id = driveFileId(link);
+  return id ? `https://drive.google.com/file/d/${id}/preview` : null;
+}
+
+/**
+ * Drive renders a poster frame for every video. Using it means the tiles show Swarnabha
+ * actually playing, and avoids putting somebody else's album art on the site.
+ */
+export function driveThumbUrl(link?: string, width = 640): string | null {
+  const id = driveFileId(link);
+  // drive.google.com/thumbnail just 302s here, so go straight to the CDN.
+  return id ? `https://lh3.googleusercontent.com/d/${id}=w${width}` : null;
+}
+
+/** Where to hear the original recording. We cannot host it, so we point at it. */
 export function listenUrl(song: Song) {
   if (song.url) return song.url;
   return `https://open.spotify.com/search/${encodeURIComponent(`${song.title} ${song.artist}`)}`;
 }
 
+/**
+ * The guitar covers, from Swarnabha's Drive folder. `drive` is the file id; titles and
+ * artists were checked against the iTunes catalogue rather than guessed from filenames.
+ */
 export const songs: Song[] = [
-  { title: 'Bleed It Out', artist: 'Linkin Park', album: 'Minutes to Midnight', year: '2007' },
+  { title: 'New Divide', artist: 'Linkin Park', album: 'Transformers: Revenge of the Fallen', year: '2009', drive: '1IpUJe_Ydcu7gkK8-98fLiG8wlYdOrAsu' },
+  { title: 'Carnival of Rust', artist: 'Poets of the Fall', album: 'Carnival of Rust', year: '2006', drive: '1FJ1jOX7TiCSnq9SFAqNzrVvFGXFBf1-t' },
+  { title: 'Dance with the Devil', artist: 'Breaking Benjamin', album: 'Phobia', year: '2006', drive: '1Z5K5YOIYEfztrhC-q4i-6XcWRSWC7f-4' },
+  { title: 'Sweater Weather', artist: 'The Neighbourhood', album: 'I Love You.', year: '2012', drive: '1hTwYaV6DCX4QKaO8BSErU-jZeciDo_jR' },
+  { title: 'Wonderwall', artist: 'Oasis', album: "(What's the Story) Morning Glory?", year: '1995', drive: '1sl22kTBIbSDYzE3MlrmxrXbx2gKCCK6O' },
+  { title: 'Viva La Vida', artist: 'Coldplay', album: 'Viva La Vida or Death and All His Friends', year: '2008', drive: '1aLHmGCEdlFTEOnW8xxJeRLxzjAhleCCR' },
+  { title: 'End of Beginning', artist: 'Djo', album: 'DECIDE', year: '2024', drive: '1-vmH7xB4l2upcwNlZdE-WWuYmVGD01c1' },
+  { title: 'About You', artist: 'The 1975', album: 'Being Funny In A Foreign Language', year: '2022', drive: '1Cmkt5bJAfrKnbQSigXwVS8vivbj8C4v0' },
+  { title: 'Hasi', artist: 'Ami Mishra', album: 'Hamari Adhuri Kahani', year: '2015', drive: '1Hy68FToYTu18_KKPbOo1UxC7edjZhAEg' },
+  { title: 'Dhundala', artist: 'Talwiinder', year: '2020', drive: '1SVDqeteBQ8B6vwj51m7RKZd-y-44TFCf' },
 ];
